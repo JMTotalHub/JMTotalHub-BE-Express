@@ -14,7 +14,30 @@ datasource db {
 }
 
 model Test {
-  id    Int     @id @default(autoincrement())
-  title  String
-  content String 
+  id    Int      @id @default(autoincrement()) 
+  title  String  @db.VarChar(100)
+  content String @db.VarChar(1000)
+}
+
+model Board {
+  id          BigInt  @id @default(autoincrement())
+  name        String  @db.VarChar(30)
+  description String  @db.VarChar(500)
+  posts       Post[]
+}
+
+model Post {
+  id        BigInt  @id @default(autoincrement())
+  title     String  @db.VarChar(100)
+  content   String  @db.Text
+  boardId   BigInt
+  board     Board   @relation(fields: [boardId], references: [id])
+  comments  Comment[]
+}
+
+model Comment {
+  id      BigInt    @id @default(autoincrement())
+  content String    @db.VarChar(500)
+  postId  BigInt
+  post    Post      @relation(fields: [postId], references: [id])
 }
