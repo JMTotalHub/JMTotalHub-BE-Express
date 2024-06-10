@@ -21,6 +21,9 @@ jobs:
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
+        
+    - name: Verify DATABASE_URL environment variable
+      run: echo "DATABASE_URL is ${{ secrets.DATABASE_URL }}"
 
     - name: Build and push Docker image
       uses: docker/build-push-action@v2
