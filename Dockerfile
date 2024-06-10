@@ -13,12 +13,8 @@ RUN npm install
 # 애플리케이션 소스 코드 복사
 COPY . .
 
-# Prisma 클라이언트 생성 및 마이그레이션 배포
-RUN npx prisma generate
-RUN npx prisma migrate deploy
-
 # 포트 노출
 EXPOSE 5000
 
 # 애플리케이션 실행
-CMD ["npm", "start"]
+CMD ["sh", "-c", "npx prisma generate && npx prisma migrate deploy && npm start"]
