@@ -42,3 +42,4 @@ jobs:
           cd JMTotalHub-DockerCompose
           sudo -E docker-compose pull express 
           sudo -E docker-compose up -d express  
+          sudo -E docker-compose logs express
