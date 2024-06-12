@@ -11,8 +11,9 @@ app.use(express.json());
 app.use(cors());
 
 // 라우터
-const testRouter = require('./routes/test.router')
-const boardRouter = require('./routes/board.router')
+const testRouter = require('./domains/test/routers/test.router')
+const boardRouter = require('./domains/board/routers/board.router')
+const postRouter = require()
 app.use('/tests', testRouter);
 app.use('/boards', boardRouter);
 
