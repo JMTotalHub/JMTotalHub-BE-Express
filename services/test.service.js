@@ -23,8 +23,8 @@ async function updateTest (testId, data) {
             id: Number(testId),
         },
         data: {
-        title,
-        content,
+            title,
+            content,
         },
     });
 }
