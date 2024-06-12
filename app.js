@@ -12,7 +12,9 @@ app.use(cors());
 
 // 라우터
 const testRouter = require('./routes/test.router')
+const boardRouter = require('./routes/board.router')
 app.use('/tests', testRouter);
+app.use('/boards', boardRouter);
 
 // 서버구동
 const PORT = 5000;
