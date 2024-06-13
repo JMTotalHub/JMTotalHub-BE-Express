@@ -16,4 +16,4 @@ const errorWrapper = (fn) => (req, res, next) => {
 //     }).catch(next);
 // };
 
-module.exports = errorWrapper;
+export default errorWrapper;

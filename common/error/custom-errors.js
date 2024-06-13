@@ -23,7 +23,7 @@ class UnauthorizedError extends CustomError {
     }
 }
 
-module.exports = {
+export {
     CustomError,
     NotFoundError,
     ValidationError,

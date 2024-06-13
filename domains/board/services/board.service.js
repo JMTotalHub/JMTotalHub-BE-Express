@@ -1,5 +1,5 @@
-const { PrismaClient } = require('@prisma/client');
-const { NotFoundError } = require('../../../common/error/customErrors')
+import { PrismaClient } from '@prisma/client';
+import { NotFoundError } from '../../../common/error/custom-errors';
 
 const prisma = new PrismaClient();
 
@@ -53,7 +53,7 @@ async function deleteBoard (boardId) {
     });
 }
 
-module.exports = {
+export {
     findBoard,
     findBoardList,
     createBoard,

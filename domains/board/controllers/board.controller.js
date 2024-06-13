@@ -1,4 +1,4 @@
-const boardService = require('../services/board.service')
+import * as boardService from '../services/board.service'
 
 async function boardList(req, res) {
     const boardList = await boardService.findBoardList();
@@ -30,7 +30,7 @@ async function boardRemove(req, res) {
     res.status(204).send();
 }
 
-module.exports = {
+export {
     boardList,
     boardDetails,
     boardAdd,
