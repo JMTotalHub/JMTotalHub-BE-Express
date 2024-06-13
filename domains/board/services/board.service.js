@@ -1,4 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
+const { NotFoundError } = require('../../../common/error/customErrors')
 
 const prisma = new PrismaClient();
 
@@ -7,11 +8,18 @@ async function findBoardList() {
 }
 
 async function findBoard(boardId) {
-    return await prisma.board.findUnique({
+
+    const board = await prisma.board.findUnique({
         where: {
             id: Number(boardId)
         }
-    })
+    });
+
+    if (!board) {
+        throw new NotFoundError('해당 ID의 게시판을 찾을 수 없습니다.');
+    }
+
+    return board;
 }
 
 async function createBoard(data) {
