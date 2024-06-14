@@ -1,56 +1,85 @@
-import { PrismaClient } from '@prisma/client';
-import { NotFoundError } from '../../../common/error/custom-errors';
+/**
+ * ======================================================================
+ * @파일    board.service.js
+ * @담당    박준모
+ * @생성일  2024-06-12
+ * @수정일  2024-06-14 
+ * @기능    board(게시판) 관련 서비스로직 모듈
+ * @설명    
+ * ---
+ * ======================================================================
+ */
 
-const prisma = new PrismaClient();
+import * as BoardRepository from '../repositories/board.repository'
+
+import * as CustomError from '../../../common/error/custom-errors';
+import { isPrismaError, handlePrismaError } from '../../../common/handler/error.prisma'; 
+
 
 async function findBoardList() {
-    return await prisma.board.findMany();
+    try {
+        return await BoardRepository.findBoardList();
+    } catch (error) {
+        if (isPrismaError(error)) {
+            handlePrismaError(error);
+        } else {
+            throw new CustomError.DataBaseError('알 수 없는 데이터베이스 오류');
+        }
+    }
 }
 
 async function findBoard(boardId) {
+    // try {
+    //     return await BoardRepository.findBoardById(boardId);
+    // } catch (error) {
+    //     if (isPrismaError(error)) {
+    //         handlePrismaError(error);
+    //     } else {
+    //         throw new CustomError.DataBaseError('알 수 없는 데이터베이스 오류');
+    //     }
+    // }
+    return await BoardRepository.findBoardById(boardId);
 
-    const board = await prisma.board.findUnique({
-        where: {
-            id: Number(boardId)
-        }
-    });
-
-    if (!board) {
-        throw new NotFoundError('해당 ID의 게시판을 찾을 수 없습니다.');
-    }
-
-    return board;
 }
 
 async function createBoard(data) {
-    const { name, description } = data;
-    return await prisma.board.create({
-        data: {
-            name,
-            description
+    try {
+        return await BoardRepository.insertBoard(data);
+    } catch (error) {
+        if (isPrismaError(error)) {
+            handlePrismaError(error);
+        } else {
+            throw new CustomError.DataBaseError('알 수 없는 데이터베이스 오류');
         }
-    });
+    }
 }
 
 async function updateBoard(boardId, data) {
-    const { name, description } = data;
-    return await prisma.board.update({
-        where: {
-            id: Number(boardId)
-        },
-        data: {
-            name,
-            description
-        }
-    });
+    // try {
+    //     return await BoardRepository.updateBoard(boardId, data);
+    // } catch (error) {
+    //     if (isPrismaError(error)) {
+    //         handlePrismaError(error);
+    //     } else {
+    //         throw new CustomError.DataBaseError('알 수 없는 데이터베이스 오류');
+    //     }
+    // }
+
+
+    return await BoardRepository.updateBoard(boardId, data);
+
 } 
 
 async function deleteBoard (boardId) {
-    return await prisma.board.delete({
-        where: {
-            id: Number(boardId)
+    try {
+        return BoardRepository.deleteBoard();
+    } catch (error) {
+        if (isPrismaError(error)) {
+            handlePrismaError(error);
+        } else {
+            throw new CustomError.DataBaseError('알 수 없는 데이터베이스 오류');
         }
-    });
+    }
 }
 
 export {
