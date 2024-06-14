@@ -1,19 +1,25 @@
-import { validate } from 'class-validator';
-import { plainToInstance } from 'class-transformer';
+import { validationResult } from 'express-validator';
 
-function validation(dtoType) {
+// 병렬 처리
+const validationMiddleware = (validations) => {
     return async (req, res, next) => {
-        const dtoInstance = plainToInstance(dtoType, req.body);
-        const errors = await validate(dtoInstance);
+        await Promise.all(validations.map(validation => validation.run(req)));
 
-        if (errors.length > 0) {
-            const errorMessages = errors.map(err => Object.values(err.constraints)).flat();
-            return res.status(400).json({ message: 'Validation error', errors: errorMessages });
+        const errors = validationResult(req);
+        if (errors.isEmpty()) {
+            return next();
         }
 
-        req.body = dtoInstance;
-        next();
-    };
-}
+        const formattedErrors = errors.array().map(err => ({
+            'target field': err.path,
+            'field location': err.location,
+            'message': err.msg
+        }));
 
-export default validation;
+        // res.status(400).json({ errors: errors.array() });
+        res.status(400).json({ errors: formattedErrors });
+
+    };
+};
+
+export default validationMiddleware;

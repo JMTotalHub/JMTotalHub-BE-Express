@@ -1,32 +1,27 @@
-import { IsString, IsNotEmpty, Length, validate } from 'class-validator';
+import { body, param } from 'express-validator';
 
-class CreateBoardDto {
-    constructor(name, description) {
-        this.name = name;
-        this.description = description;
-    }
+// 요청 본문(body) 검증
+const boardBodyDto = [
+    body('name')
+        .trim()
+        .escape()
+        .notEmpty().withMessage('Name is required')
+        .isString().withMessage('Name must be String')
+        .isLength({ max: 100 }).withMessage('Name  must be at most 100 characters long'),
+    body('description')
+        .escape()
+        .notEmpty().withMessage('description is required')
+        .isString().withMessage('description must be String')
+        .isLength({ max: 500 }).withMessage('description must be at most 50 characters long')
+];
 
-    static validate(dto) {
-        return validate(dto);
-    }
+// // URL 파라미터 검증
+// const BoardParamDto = [
+//     param('id')
+//         .isUUID().withMessage('ID must be a valid UUID')
+// ];
+
+export { 
+    boardBodyDto, 
+    // BoardParamDto
 }
-
-const applyDecorators = (target, propertyKey, decorators) => {
-    decorators.forEach(decorator => {
-        decorator(target, propertyKey);
-    });
-};
-
-applyDecorators(CreateBoardDto.prototype, 'name', [
-    IsString(),
-    IsNotEmpty(),
-    Length(3, 50)
-]);
-
-applyDecorators(CreateBoardDto.prototype, 'description', [
-    IsString(),
-    IsNotEmpty(),
-    Length(3, 255)
-]);
-
-export default CreateBoardDto
