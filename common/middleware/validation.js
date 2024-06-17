@@ -1,24 +1,53 @@
-import { validationResult } from 'express-validator';
+const validationMiddleware = (dto) => {
+    return (req, res, next) => {
+        const { body, query, params } = dto;
+        const errors = [];
 
-// 병렬 처리
-const validationMiddleware = (validations) => {
-    return async (req, res, next) => {
-        await Promise.all(validations.map(validation => validation.run(req)));
-
-        const errors = validationResult(req);
-        if (errors.isEmpty()) {
-            return next();
+        if (body) {
+            const { error: bodyError } = body.validate(req.body, { abortEarly: false });
+            if (bodyError) {
+                console.log(bodyError);
+                bodyError.details.forEach(detail => {
+                    errors.push({
+                        field_type: 'body',
+                        field_name: detail.path.join('.'),
+                        message: detail.message
+                    });
+                });
+            }
         }
 
-        const formattedErrors = errors.array().map(err => ({
-            'target field': err.path,
-            'field location': err.location,
-            'message': err.msg
-        }));
+        if (query) {
+            const { error: queryError } = query.validate(req.query, { abortEarly: false });
+            if (queryError) {
+                queryError.details.forEach(detail => {
+                    errors.push({
+                        field_type: 'query',
+                        field_name: detail.path.join('.'),
+                        message: detail.message
+                    });
+                });
+            }
+        }
 
-        // res.status(400).json({ errors: errors.array() });
-        res.status(400).json({ errors: formattedErrors });
+        if (params) {
+            const { error: paramsError } = params.validate(req.params, { abortEarly: false });
+            if (paramsError) {
+                paramsError.details.forEach(detail => {
+                    errors.push({
+                        field_type: 'params',
+                        field_name: detail.path.join('.'),
+                        message: detail.message
+                    });
+                });
+            }
+        }
 
+        if (errors.length > 0) {
+            return res.status(400).json({ errors });
+        }
+
+        next();
     };
 };
 

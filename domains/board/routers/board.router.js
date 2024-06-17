@@ -1,10 +1,10 @@
 import express from 'express';
-import errorWrapper from '../../../common/error/error-wrapper.js';
 
-import validationMiddleware from '../../../common/middleware/validation.js';
-import * as boardDto from '../dto/board.create-dto';
+import errorWrapper from '../../../common/error/error-wrapper';
+import validationMiddleware from '../../../common/middleware/validation';
 
-import * as boardController from '../controllers/board.controller.js';
+import * as boardController from '../controllers/board.controller';
+import * as BoardDto from '../dto/board.dto'
 
 const boardRouter = express.Router();
 
@@ -14,8 +14,8 @@ const boardRouter = express.Router();
 // 3. 에러감지 래퍼함수에 감싼 요청처리함수 
 boardRouter.get('/', errorWrapper(boardController.boardList));
 boardRouter.get('/:boardId', errorWrapper(boardController.boardDetails));
-boardRouter.post('/', validationMiddleware(boardDto.boardBodyDto), errorWrapper(boardController.boardAdd));
-boardRouter.put('/:boardId', errorWrapper(boardController.boardModify));
+boardRouter.post('/', validationMiddleware(BoardDto.BoardCreateDto), errorWrapper(boardController.boardAdd));
+boardRouter.put('/:boardId', validationMiddleware(BoardDto.BoardUpdateDto), errorWrapper(boardController.boardModify));
 boardRouter.delete('/:boardId', errorWrapper(boardController.boardRemove));
 
 export default boardRouter;
