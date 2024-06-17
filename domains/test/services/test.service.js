@@ -1,4 +1,4 @@
-const { PrismaClient } = require('@prisma/client');
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -38,7 +38,7 @@ async function deleteTest (testId) {
 }
 
 
-module.exports = {
+export {
     findTestList,
     createTest,
     updateTest,

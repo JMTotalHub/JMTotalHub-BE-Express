@@ -1,20 +1,19 @@
-const { PrismaClient } = require('@prisma/client');
-
-const prisma = new PrismaClient();
+// src/repositories/board.repository.js
+import prisma from '../../../prisma';
 
 async function findBoardList() {
     return await prisma.board.findMany();
 }
 
-async function findBoard(boardId) {
-    return await prisma.board.findUnique({
+async function findBoardById(boardId) {
+    return await prisma.board.findUniqueOrThrow({
         where: {
             id: Number(boardId)
         }
-    })
+    });
 }
 
-async function createBoard(data) {
+async function insertBoard(data) {
     const { name, description } = data;
     return await prisma.board.create({
         data: {
@@ -35,9 +34,9 @@ async function updateBoard(boardId, data) {
             description
         }
     });
-} 
+}
 
-async function deleteBoard (boardId) {
+async function deleteBoard(boardId) {
     return await prisma.board.delete({
         where: {
             id: Number(boardId)
@@ -45,10 +44,10 @@ async function deleteBoard (boardId) {
     });
 }
 
-module.exports = {
-    findBoard,
+export {
     findBoardList,
-    createBoard,
+    findBoardById,
+    insertBoard,
     updateBoard,
     deleteBoard
-}
+};
