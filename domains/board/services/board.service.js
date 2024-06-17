@@ -31,7 +31,7 @@ async function updateBoard(boardId, data) {
 }
 
 async function deleteBoard(boardId) {
-    return BoardRepository.deleteBoard();
+    return BoardRepository.deleteBoard(boardId);
 }
 
 export {
