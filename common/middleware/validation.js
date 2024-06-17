@@ -3,45 +3,29 @@ const validationMiddleware = (dto) => {
         const { body, query, params } = dto;
         const errors = [];
 
-        if (body) {
-            const { error: bodyError } = body.validate(req.body, { abortEarly: false });
-            if (bodyError) {
-                console.log(bodyError);
-                bodyError.details.forEach(detail => {
-                    errors.push({
-                        field_type: 'body',
-                        field_name: detail.path.join('.'),
-                        message: detail.message
+        const validateAndCollectErrors = (schema, data, fieldType) => {
+            if (schema) {
+                const { error, value } = schema.validate(data, { abortEarly: false });
+                if (error) {
+                    error.details.forEach(detail => {
+                        errors.push({
+                            field_type: fieldType,
+                            field_name: detail.path.join('.'),
+                            message: detail.message
+                        });
                     });
-                });
+                }
+                // 검증 과저 중 값 변환이 있는경우(ex. trim)
+                return value;
             }
-        }
+            // 검증 작업만 있어 원본 값 그대로 전달되는경우
+            return data;
+        };
 
-        if (query) {
-            const { error: queryError } = query.validate(req.query, { abortEarly: false });
-            if (queryError) {
-                queryError.details.forEach(detail => {
-                    errors.push({
-                        field_type: 'query',
-                        field_name: detail.path.join('.'),
-                        message: detail.message
-                    });
-                });
-            }
-        }
-
-        if (params) {
-            const { error: paramsError } = params.validate(req.params, { abortEarly: false });
-            if (paramsError) {
-                paramsError.details.forEach(detail => {
-                    errors.push({
-                        field_type: 'params',
-                        field_name: detail.path.join('.'),
-                        message: detail.message
-                    });
-                });
-            }
-        }
+        // 전달값에 저장
+        req.body = validateAndCollectErrors(body, req.body, 'body');
+        req.query = validateAndCollectErrors(query, req.query, 'query');
+        req.params = validateAndCollectErrors(params, req.params, 'params');
 
         if (errors.length > 0) {
             return res.status(400).json({ errors });
