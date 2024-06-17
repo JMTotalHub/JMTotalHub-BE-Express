@@ -15,8 +15,10 @@ app.use(cors());
 // 라우터
 import testRouter from './domains/test/routers/test.router.js';
 import boardRouter from './domains/board/routers/board.router.js';
+import postRouter from './domains/board/routers/post.router.js';
 app.use('/tests', testRouter);
 app.use('/boards', boardRouter);
+app.use('/posts', postRouter);
 
 // 예외처리 미들웨어
 import errorHandler from './common/handler/error.js';
