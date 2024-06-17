@@ -1,7 +1,5 @@
 // src/repositories/board.repository.js
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import prisma from '../../../prisma';
 
 async function findBoardList() {
     return await prisma.board.findMany();
@@ -47,7 +45,7 @@ async function deleteBoard(boardId) {
 }
 
 export {
-    findBoardList, 
+    findBoardList,
     findBoardById,
     insertBoard,
     updateBoard,

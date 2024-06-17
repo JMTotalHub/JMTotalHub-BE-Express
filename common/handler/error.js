@@ -1,8 +1,9 @@
 import { CustomError } from '../error/custom-errors';
-import { isPrismaError, handlePrismaError } from './error.prisma'; 
+import { isPrismaError, handlePrismaError } from './error.prisma';
 
 
 const errorHandler = (err, req, res, next) => {
+    console.log(err)
     if (err instanceof CustomError) {
         res.status(err.statusCode).json({ message: err.message });
     } else if (isPrismaError(err)) {

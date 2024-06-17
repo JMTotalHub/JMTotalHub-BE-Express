@@ -1,55 +1,80 @@
-import { PrismaClient } from '@prisma/client';
-import * as boardService from '../../../domains/board/services/board.service';
-import { NotFoundError } from '../../../common/error/custom-errors';
+/**
+ * @파일    board.service.test.js
+ * @담당    박준모
+ * @생성일  2024-06-17
+ * @수정일  2024-06-14 
+ * @기능    board(게시판) 서비스 로직 테스트
+ * @설명    
+ */
 
-jest.mock('@prisma/client');
-const prisma = new PrismaClient();
+import * as BoardService from '../../../domains/board/services/board.service';
+import * as BoardRepository from '../../../domains/board/repositories/board.repository';
+import * as CustomError from '../../../common/error/custom-errors';
+import { isPrismaError } from '../../../common/handler/error.prisma';
+import { PrismaClientKnownRequestError } from '@prisma/client';
 
-describe('Board Service', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
+// Jest Mock 설정
+jest.mock('../../../domains/board/repositories/board.repository');
+jest.mock('../../../common/handler/error.prisma');
 
-  it('should find all boards', async () => {
-    prisma.board.findMany.mockResolvedValue([]);
-    const result = await boardService.findBoardList();
-    expect(result).toEqual([]);
-    expect(prisma.board.findMany).toHaveBeenCalledTimes(1);
-  });
+describe('BoardService', () => {
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
 
-  it('should find a board by ID', async () => {
-    const board = { id: 1, name: 'Test Board' };
-    prisma.board.findUnique.mockResolvedValue(board);
-    const result = await boardService.findBoard(1);
-    expect(result).toEqual(board);
-    expect(prisma.board.findUnique).toHaveBeenCalledWith({ where: { id: 1 } });
-  });
+    describe('findBoardList', () => {
+        test('should return a list of boards', async () => {
+            const mockBoardList = [{ id: 1, title: 'Board 1' }, { id: 2, title: 'Board 2' }];
+            BoardRepository.findBoardList.mockResolvedValue(mockBoardList);
 
-  it('should throw NotFoundError if board not found', async () => {
-    prisma.board.findUnique.mockResolvedValue(null);
-    await expect(boardService.findBoard(1)).rejects.toThrow(NotFoundError);
-  });
+            const result = await BoardService.findBoardList();
+            expect(result).toEqual(mockBoardList);
+        });
+    });
 
-  it('should create a new board', async () => {
-    const newBoard = { id: 1, name: 'New Board', description: 'New Description' };
-    prisma.board.create.mockResolvedValue(newBoard);
-    const result = await boardService.createBoard({ name: 'New Board', description: 'New Description' });
-    expect(result).toEqual(newBoard);
-    expect(prisma.board.create).toHaveBeenCalledWith({ data: { name: 'New Board', description: 'New Description' } });
-  });
+    describe('findBoard', () => {
+        test('should return a board by ID', async () => {
+            const mockBoard = { id: 1, title: 'Board 1' };
+            BoardRepository.findBoardById.mockResolvedValue(mockBoard);
 
-  it('should update a board', async () => {
-    const updatedBoard = { id: 1, name: 'Updated Board', description: 'Updated Description' };
-    prisma.board.update.mockResolvedValue(updatedBoard);
-    const result = await boardService.updateBoard(1, { name: 'Updated Board', description: 'Updated Description' });
-    expect(result).toEqual(updatedBoard);
-    expect(prisma.board.update).toHaveBeenCalledWith({ where: { id: 1 }, data: { name: 'Updated Board', description: 'Updated Description' } });
-  });
+            const result = await BoardService.findBoard(1);
+            expect(result).toEqual(mockBoard);
+        });
 
-  it('should delete a board', async () => {
-    prisma.board.delete.mockResolvedValue({});
-    const result = await boardService.deleteBoard(1);
-    expect(result).toEqual({});
-    expect(prisma.board.delete).toHaveBeenCalledWith({ where: { id: 1 } });
-  });
+        test('should throw error if no board data', async () => {
+            const error = new PrismaClientKnownRequestError('No board found', 'P2025', '2.0.0');
+            BoardRepository.findBoardById.mockRejectedValue(error);
+
+            await expect(BoardService.findBoard(1)).rejects.toThrow('No board found');
+        });
+    });
+
+    describe('createBoard', () => {
+        test('should create a new board', async () => {
+            const mockBoard = { id: 1, title: 'New Board' };
+            BoardRepository.insertBoard.mockResolvedValue(mockBoard);
+
+            const result = await BoardService.createBoard({ title: 'New Board' });
+            expect(result).toEqual(mockBoard);
+        });
+    });
+
+    describe('updateBoard', () => {
+        test('should update a board by ID', async () => {
+            const mockBoard = { id: 1, title: 'Updated Board' };
+            BoardRepository.updateBoard.mockResolvedValue(mockBoard);
+
+            const result = await BoardService.updateBoard(1, { title: 'Updated Board' });
+            expect(result).toEqual(mockBoard);
+        });
+    });
+
+    describe('deleteBoard', () => {
+        test('should delete a board by ID', async () => {
+            BoardRepository.deleteBoard.mockResolvedValue(true);
+
+            const result = await BoardService.deleteBoard(1);
+            expect(result).toBe(true);
+        });
+    });
 });

@@ -23,13 +23,13 @@ import * as CustomError from '../error/custom-errors';
 // Prisma 오류를 확인하는 함수 
 export function isPrismaError(error) {
     return error instanceof PrismaClientKnownRequestError ||
-            error instanceof PrismaClientUnknownRequestError ||
-            error instanceof PrismaClientRustPanicError ||
-            error instanceof PrismaClientInitializationError ||
-            error instanceof PrismaClientValidationError;
+        error instanceof PrismaClientUnknownRequestError ||
+        error instanceof PrismaClientRustPanicError ||
+        error instanceof PrismaClientInitializationError ||
+        error instanceof PrismaClientValidationError;
 }
 
-// Prisma 오류를 처리하는 함수
+// Prisma 오류를 처리하는 함수 (미적용 중)
 export function handlePrismaError(error) {
     if (error instanceof PrismaClientKnownRequestError) {
         switch (error.code) {
