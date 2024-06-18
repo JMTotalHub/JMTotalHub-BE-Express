@@ -10,9 +10,17 @@ import * as PostDto from '../dto/post.dto'
 
 const postRouter = express.Router({ mergeParams: true });
 
-postRouter.post('/:postId',
+postRouter.get('/:postId',
     errorWrapper(PostController.postDetails));
 
+postRouter.put('/:postId',
+    escapeHtmlMiddleware,
+    validationMiddleware(PostDto.PostUpdateDto),
+    errorWrapper(PostController.postModify)
+)
 
+postRouter.delete('/:postId',
+    errorWrapper(PostController.postRemove)
+)
 
 export default postRouter;

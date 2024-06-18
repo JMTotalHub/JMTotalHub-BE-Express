@@ -2,7 +2,6 @@ import prisma from "../../../prisma";
 
 async function findPostListByBoardId(boardId, queryData) {
 
-    // const { pageNum = 1, dataPerPage = 10, searchType, searchText, sortField = 'id', sortOrder = 'desc' } = queryData
     const { pageNum, dataPerPage, searchType, searchText, sortField, sortOrder } = queryData
 
     let where = {
