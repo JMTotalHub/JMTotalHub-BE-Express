@@ -11,7 +11,7 @@
  */
 
 import * as BoardRepository from '../repositories/board.repository'
-import * as PostRepository from '../repositories/post.repository'
+import * as PostRepository from '../repositories/board.post.repository'
 
 async function findBoardList() {
     return await BoardRepository.findBoardList();
@@ -20,10 +20,6 @@ async function findBoardList() {
 async function findBoard(boardId) {
     return await BoardRepository.findBoardById(boardId);
 
-}
-
-async function findPostList(boardId, queryData) {
-    return await PostRepository.findPostListByBoardId(boardId, queryData);
 }
 
 async function createBoard(bodyData) {
@@ -42,7 +38,6 @@ async function deleteBoard(boardId) {
 export {
     findBoard,
     findBoardList,
-    findPostList,
     createBoard,
     updateBoard,
     deleteBoard

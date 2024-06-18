@@ -20,8 +20,8 @@ async function boardAdd(req, res) {
 async function boardModify(req, res) {
     const { boardId } = req.params;
     const boardData = req.body;
-    const updatedBoard = await BoardService.updateBoard(boardId, boardData);
-    res.status(200).json(updatedBoard);
+    const modifiedBoard = await BoardService.updateBoard(boardId, boardData);
+    res.status(200).json(modifiedBoard);
 }
 
 async function boardRemove(req, res) {
