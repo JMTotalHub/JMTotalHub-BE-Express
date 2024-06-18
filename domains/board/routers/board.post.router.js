@@ -4,8 +4,8 @@ import escapeHtmlMiddleware from '../../../common/middleware/escape-html';
 import validationMiddleware from '../../../common/middleware/validation';
 import errorWrapper from '../../../common/error/error-wrapper';
 
-import * as PostController from '../controllers/post.controller'
-import * as PostDto from '../dto/post.dto'
+import * as PostController from '../controllers/post.controller';
+import * as PostDto from '../dto/post.dto';
 
 const boardPostRouter = express.Router({ mergeParams: true });
 
@@ -21,4 +21,4 @@ boardPostRouter.post('/',
     errorWrapper(PostController.postAdd)
 );
 
-export default boardPostRouter
+export default boardPostRouter;
