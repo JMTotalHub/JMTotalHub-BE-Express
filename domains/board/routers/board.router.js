@@ -19,9 +19,6 @@ boardRouter.get('/',
 boardRouter.get('/:boardId',
     errorWrapper(BoardController.boardDetails));
 
-boardRouter.get('/:boardId/posts',
-    errorWrapper(BoardController.postList));
-
 boardRouter.post('/',
     escapeHtmlMiddleware,
     validationMiddleware(BoardDto.BoardCreateDto),
