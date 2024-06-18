@@ -13,8 +13,8 @@ async function findBoardById(boardId) {
     });
 }
 
-async function insertBoard(data) {
-    const { name, description } = data;
+async function insertBoard(bodyData) {
+    const { name, description } = bodyData;
     return await prisma.board.create({
         data: {
             name,
@@ -23,8 +23,8 @@ async function insertBoard(data) {
     });
 }
 
-async function updateBoard(boardId, data) {
-    const { name, description } = data;
+async function updateBoard(boardId, bodyData) {
+    const { name, description } = bodyData;
     return await prisma.board.update({
         where: {
             id: Number(boardId)

@@ -1,19 +1,25 @@
-// import Joi from "joi";
+import Joi from "joi";
 
-// const sanitizeHtml = require('sanitize-html');
-// const Joi-Valid = require('joi-sanitize-html')(Joi, sanitizeHtml);
+const PostCreateBodyDto = Joi.object({
+    title: Joi.string().max(100).required().messages({
+        'string.base': 'String must be a string',
+        'string.empty': 'String is required',
+        'string.max': 'String must be at most 100 characters long',
+        'any.required': 'String is required'
+    }),
+    content: Joi.string().max(10000).required().messages({
+        'string.base': 'Content must be a string',
+        'string.empty': 'Content is required',
+        'string.max': 'Content must be at most 10000 characters long',
+        'any.required': 'Content is required'
+    })
+});
 
-// const PostCreateBodyDto = Joi.object({
-//     title: Joi.string().trim().escapeHTML().max(100).required().message({
-//         'string.base': 'Title must be a string',
-//         'string.empty': 'Title is require',
-//         'string.max': 'Title must be at most 100 characters long',
-//         'any.required': 'Name is required'
-//     }),
-//     content: Joi.string().trim().escapeHTML().max(65535).required().message({
-//         'string.base': 'Content must be a string',
-//         'string.empty': 'Content is require',
-//         'string.max': 'Content must be at most 100 characters long',
-//         'any.required': 'Content is required'
-//     })
-// })
+// DTO 객체
+const PostCreateDto = {
+    body: PostCreateBodyDto,
+    query: null,
+    params: null
+};
+
+export default PostCreateDto;
