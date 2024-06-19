@@ -1,40 +1,42 @@
-import PrismaClient from '@prisma/client';
+/**
+ * ======================================================================
+ * @파일    post.service.js
+ * @담당    박준모
+ * @생성일  2024-06-18
+ * @수정일  --- 
+ * @기능    post(게시글) 관련 서비스 모듈
+ * @설명    
+ * ---
+ * ======================================================================
+ */
 
-const prisma = PrismaClient();
 
-async function findPostList(pageNum=1, dataPerPage=10, searchType, searchText, sortField = 'id', sortOrder='desc') {
+import * as PostRepository from '../repositories/post.repository'
 
-    let where = {}
-
-    // 검색정보 있어야  where절 생성
-    // mode 통해 대소문자 구별안하는 걸로 설정
-    if (searchType && searchText) {
-        where[searchType] = {
-            contains: searchText,
-            mode: 'insensitive' 
-        };
-    }
-
-    const postList = await prisma.post.findMany({
-        skip: (pageNum - 1) * dataPerPage,
-        take: dataPerPage,
-        where,
-        orderBy: {
-            [sortField]: sortOrder
-        }
-    })   
-
-    // 총 데이터개수
-    const totalDataCount = await prisma.board.count();
-    // 총 페이지수
-    const totalPage = Math.ceil(totalDataCount / dataPerPage);
-
-    return {
-        postList,
-        totalPage
-    }
+async function findPostList(boardId, queryData) {
+    return await PostRepository.findPostListByBoardId(boardId, queryData);
 }
 
-async function createPost(data) {
-    const { title, content, board_id } = data 
+async function createPost(boardId, postData) {
+    return await PostRepository.insertPost(boardId, postData);
+}
+
+async function findPost(postId) {
+    return await PostRepository.findPostById(postId);
+}
+
+async function updatePost(postId, bodyData) {
+    return await PostRepository.updatePost(postId, bodyData);
+}
+
+async function deletePost(postId) {
+    return await PostRepository.deletePost(postId);
+}
+
+export {
+    findPostList,
+    createPost,
+    findPost,
+    updatePost,
+    deletePost
 }

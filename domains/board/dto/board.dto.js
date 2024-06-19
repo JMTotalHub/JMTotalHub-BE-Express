@@ -1,11 +1,7 @@
-import BoardCreateDto from './board.create-dto';
-// const BoardUpdateDto = require('./BoardUpdateDto');
-// const UserCreateDto = require('./UserCreateDto');
-// const UserUpdateDto = require('./UserUpdateDto');
+import BoardCreateDto from './board/board.create-dto';
+import BoardUpdateDto from './board/board.update-dto';
 
 export {
     BoardCreateDto,
-    // BoardUpdateDto,
-    // UserCreateDto,
-    // UserUpdateDto,
+    BoardUpdateDto,
 };

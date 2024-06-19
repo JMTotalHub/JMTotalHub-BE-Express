@@ -21,12 +21,12 @@ async function findBoard(boardId) {
 
 }
 
-async function createBoard(data) {
-    return await BoardRepository.insertBoard(data);
+async function createBoard(bodyData) {
+    return await BoardRepository.insertBoard(bodyData);
 }
 
-async function updateBoard(boardId, data) {
-    return await BoardRepository.updateBoard(boardId, data);
+async function updateBoard(boardId, bodyData) {
+    return await BoardRepository.updateBoard(boardId, bodyData);
 
 }
 
