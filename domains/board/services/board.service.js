@@ -11,7 +11,6 @@
  */
 
 import * as BoardRepository from '../repositories/board.repository'
-import * as PostRepository from '../repositories/board.post.repository'
 
 async function findBoardList() {
     return await BoardRepository.findBoardList();

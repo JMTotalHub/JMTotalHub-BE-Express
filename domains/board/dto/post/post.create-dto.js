@@ -2,10 +2,10 @@ import Joi from "joi";
 
 const PostCreateBodyDto = Joi.object({
     title: Joi.string().max(100).required().messages({
-        'string.base': 'String must be a string',
-        'string.empty': 'String is required',
-        'string.max': 'String must be at most 100 characters long',
-        'any.required': 'String is required'
+        'string.base': 'Title must be a string',
+        'string.empty': 'Title is required',
+        'string.max': 'Title must be at most 100 characters long',
+        'any.required': 'Title is required'
     }),
     content: Joi.string().max(10000).required().messages({
         'string.base': 'Content must be a string',

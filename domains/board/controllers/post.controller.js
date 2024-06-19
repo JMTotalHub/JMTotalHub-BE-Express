@@ -1,4 +1,18 @@
-import * as PostService from '../services/post.service'
+import * as PostService from '../services/post.service';
+
+async function postList(req, res) {
+    const { boardId } = req.params;
+    const queryData = req.query;
+    const postList = await PostService.findPostList(boardId, queryData);
+    res.status(200).json(postList);
+}
+
+async function postAdd(req, res) {
+    const { boardId } = req.params;
+    const postData = req.body;
+    const createdPost = await PostService.createPost(boardId, postData);
+    res.status(201).json(createdPost);
+}
 
 async function postDetails(req, res) {
     const { postId } = req.params;
@@ -20,6 +34,8 @@ async function postRemove(req, res) {
 }
 
 export {
+    postList,
+    postAdd,
     postDetails,
     postModify,
     postRemove

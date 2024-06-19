@@ -13,6 +13,13 @@
 
 import * as PostRepository from '../repositories/post.repository'
 
+async function findPostList(boardId, queryData) {
+    return await PostRepository.findPostListByBoardId(boardId, queryData);
+}
+
+async function createPost(boardId, postData) {
+    return await PostRepository.insertPost(boardId, postData);
+}
 
 async function findPost(postId) {
     return await PostRepository.findPostById(postId);
@@ -27,6 +34,8 @@ async function deletePost(postId) {
 }
 
 export {
+    findPostList,
+    createPost,
     findPost,
     updatePost,
     deletePost
