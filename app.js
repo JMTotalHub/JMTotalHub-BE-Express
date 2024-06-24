@@ -9,6 +9,7 @@ dotenv.config();
 const app = express();
 
 // 미들웨어
+app.use(morgan('dev'));
 app.use(express.json());
 app.use(cors());
 
@@ -21,6 +22,7 @@ app.use('/boards', boardRouter);
 
 // 예외처리 미들웨어
 import errorHandler from './common/handler/error.js';
+import morgan from 'morgan';
 app.use(errorHandler);
 
 // 서버구동
