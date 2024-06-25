@@ -10,6 +10,10 @@ async function postList(req, res) {
 async function postAdd(req, res) {
     const { boardId } = req.params;
     const postData = req.body;
+    console.log('controller!!!!');
+    console.log(boardId);
+    console.log(postData);
+
     const createdPost = await PostService.createPost(boardId, postData);
     res.status(201).json(createdPost);
 }
