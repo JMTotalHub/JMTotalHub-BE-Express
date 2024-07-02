@@ -21,6 +21,10 @@ commentWithPostIdRouter.post('/',
     errorWrapper(CommentController.commentAdd)
 )
 
+commentRouter.get('/:commentId',
+    errorWrapper(CommentController.commentDetails)
+)
+
 commentRouter.put('/:commentId',
     escapeHtmlMiddleware,
     validationMiddleware(CommentDto.CommentUpdateDto),

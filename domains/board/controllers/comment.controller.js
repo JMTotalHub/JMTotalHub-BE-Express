@@ -7,6 +7,12 @@ async function commentList(req, res) {
     res.status(200).json(commentList);
 }
 
+async function commentDetails(req, res) {
+    const {commentId} = req.params;
+    const commentDetails = await CommentService.findComment(commentId);
+    res.status(200).json(commentDetails);
+}
+
 async function commentAdd(req, res) {
     const { postId } = req.params;
     const bodyData = req.body;
@@ -29,6 +35,7 @@ async function commentDelete(req, res) {
 
 export {
     commentList,
+    commentDetails,
     commentAdd,
     commentModify,
     commentDelete
