@@ -48,6 +48,7 @@ jobs:
         username: ${{ secrets.EC2_USERNAME }}
         key: ${{ secrets.EC2_PRIVATE_KEY }}
         script: |
+          docker image prune -a -f --filter "until=12h"
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           export DATABASE_URL=${{ secrets.DATABASE_URL }}
           cd JMTotalHub-DockerCompose
