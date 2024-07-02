@@ -16,6 +16,10 @@ async function findCommentList(postId, queryData) {
     return await CommentRepository.findCommentListByPostId(postId, queryData);
 }
 
+async function findComment(commentId) {
+    return await CommentRepository.findCommentById(commentId);
+}
+
 async function createComment(postId, bodyData) {
     return await CommentRepository.insertComment(postId, bodyData);
 }
@@ -30,6 +34,7 @@ async function deleteComment(commentId) {
 
 export {
     findCommentList,
+    findComment,
     createComment,
     updateComment,
     deleteComment

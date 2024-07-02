@@ -44,6 +44,14 @@ async function findCommentListByPostId(postId, queryData) {
     }
 }
 
+async function findCommentById(commentId) {
+    return await prisma.comment.findUniqueOrThrow({
+        where: {
+            id: Number(commentId)
+        }
+    })
+} 
+
 async function insertComment(postId, bodyData) {
     const { content } = bodyData;
 
@@ -80,6 +88,7 @@ async function deleteComment(commentId) {
 
 export {
     findCommentListByPostId,
+    findCommentById,
     insertComment,
     updateComment,
     deleteComment
