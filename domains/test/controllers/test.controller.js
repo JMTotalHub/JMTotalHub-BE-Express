@@ -38,9 +38,34 @@ async function testRemove(req, res) {
   }
 }
 
+
+// Redis 관련 컨트롤러
+async function getCacheValue(req, res) {
+  try {
+    const { key } = req.params;
+    const value = await testService.getFromCache(key);
+    res.status(200).json({ key, value });
+  } catch (error) {
+    res.status(500).json({ error: `An error occurred: ${error.message}` });
+  }
+}
+
+async function setCacheValue(req, res) {
+  try {
+    const { key, value } = req.body;
+    await testService.setToCache(key, value);
+    res.status(201).json({ message: 'Value set successfully' });
+  } catch (error) {
+    res.status(500).json({ error: `An error occurred: ${error.message}` });
+  }
+}
+
+
 export {
   testList,
   testAdd,
   testModify,
-  testRemove
+  testRemove,
+  getCacheValue,
+  setCacheValue,
 };

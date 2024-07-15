@@ -8,4 +8,8 @@ testRouter.post('/', testController.testAdd);
 testRouter.put('/:testId', testController.testModify);
 testRouter.delete('/:testId', testController.testRemove);
 
+// Redis 관련 경로 추가
+testRouter.get('/cache/:key', testController.getCacheValue);
+testRouter.post('/cache', testController.setCacheValue);
+
 export default testRouter;
