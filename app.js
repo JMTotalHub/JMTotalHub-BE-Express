@@ -16,8 +16,10 @@ app.use(cors());
 // 라우터 (도메인 분류)
 import testRouter from './domains/test/routers/test.router.js';
 import boardRouter from './domains/board/routers';
+import userRouter from './/domains/user/routers'
 app.use('/tests', testRouter);
 app.use('/boards', boardRouter);
+// app.use('/users', userRouter);
 
 
 // 예외처리 미들웨어
