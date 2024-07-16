@@ -51,8 +51,8 @@ jobs:
           docker image prune -a -f --filter "until=12h"
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           export DATABASE_URL=${{ secrets.DATABASE_URL }}
-          export REDIS_PASSWORD=${{ secrets.REDIS_URL }}
-          export REDIS_PASSWORD=${{ secrets.REDIS_PORT }}
+          export REDIS_URL=${{ secrets.REDIS_URL }}
+          export REDIS_PORT=${{ secrets.REDIS_PORT }}
           export REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
           cd JMTotalHub-DockerCompose
           sudo -E docker-compose pull express 
