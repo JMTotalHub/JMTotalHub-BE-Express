@@ -19,7 +19,7 @@ import boardRouter from './domains/board/routers';
 import userRouter from './/domains/user/routers'
 app.use('/tests', testRouter);
 app.use('/boards', boardRouter);
-app.use('/user', user)
+// app.use('/users', userRouter);
 
 
 // 예외처리 미들웨어

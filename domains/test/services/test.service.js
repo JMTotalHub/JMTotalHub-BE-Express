@@ -39,39 +39,44 @@ async function deleteTest (testId) {
 
 // 아래 Redis 테스트
 import dotenv from 'dotenv';
+import { createClient } from 'redis';
 
 dotenv.config();
 
-const redisClient = redis.createClient({
-  host: 'redis',
-  port: 6379,
+// Redis 클라이언트 생성
+const redisClient = createClient({
+  url: `redis://${process.env.REDIS_URL}:${process.env.REDIS_PORT}`,
   password: process.env.REDIS_PASSWORD,
 });
 
-redisClient.on('error', (err) => {
-    console.error('Redis error:', err);
+// Redis 연결
+redisClient.connect()
+  .then(() => {
+    console.log('Connected to Redis');
+  })
+  .catch((err) => {
+    console.error('Error connecting to Redis:', err);
   });
-  
 
-// Redis에서 값을 가져오는 함수
-const getFromCache = (key) => {
-    return new Promise((resolve, reject) => {
-      redisClient.get(key, (err, data) => {
-        if (err) return reject(err);
-        resolve(data);
-      });
-    });
-  };
-  
-  // Redis에 값을 설정하는 함수
-  const setToCache = (key, value) => {
-    return new Promise((resolve, reject) => {
-      redisClient.set(key, value, (err) => {
-        if (err) return reject(err);
-        resolve();
-      });
-    });
-  };
+// Redis를 사용하는 함수
+async function getFromCache(key) {
+  try {
+    const data = await redisClient.get(key);
+    return data;
+  } catch (err) {
+    console.error('Error getting data from Redis:', err);
+    throw err;
+  }
+}
+
+async function setToCache(key, value) {
+  try {
+    await redisClient.set(key, value);
+  } catch (err) {
+    console.error('Error setting data in Redis:', err);
+    throw err;
+  }
+}
 
 
 export {
