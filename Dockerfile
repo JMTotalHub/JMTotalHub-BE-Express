@@ -17,4 +17,5 @@ COPY . .
 EXPOSE 5000
 
 # 애플리케이션 실행
-CMD ["sh", "-c", "npx prisma --version && npx prisma generate && npx prisma migrate deploy && npm start"]
+# CMD ["sh", "-c", "npx prisma --version && npx prisma generate && npx prisma migrate deploy && npm start"]
+CMD ["sh", "-c", "npx prisma --version && npx prisma migrate deploy && npm start"]
