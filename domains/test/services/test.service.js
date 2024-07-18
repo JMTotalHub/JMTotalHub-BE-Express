@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import redisClient from '../../../common/utils/redisClient';
 
 const prisma = new PrismaClient();
 
@@ -36,27 +37,6 @@ async function deleteTest (testId) {
         }
     });
 }
-
-// 아래 Redis 테스트
-import dotenv from 'dotenv';
-import { createClient } from 'redis';
-
-dotenv.config();
-
-// Redis 클라이언트 생성
-const redisClient = createClient({
-  url: `redis://${process.env.REDIS_URL}:${process.env.REDIS_PORT}`,
-  password: process.env.REDIS_PASSWORD,
-});
-
-// Redis 연결
-redisClient.connect()
-  .then(() => {
-    console.log('Connected to Redis');
-  })
-  .catch((err) => {
-    console.error('Error connecting to Redis:', err);
-  });
 
 // Redis를 사용하는 함수
 async function getFromCache(key) {
