@@ -17,13 +17,46 @@ model test {
   @@map("test")
 }
 
+model user {
+  id         Int       @id @default(autoincrement())
+  email      String    @unique
+  password   String
+  loginType  LoginType
+  providerId String?
+  roleType   RoleType     
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+
+  boards     board[]
+  posts      post[]
+  comments   comment[]
+
+
+  @@unique([email, loginType])
+}
+
+enum LoginType {
+  normal
+  google
+  naver
+}
+
+enum RoleType {
+  admin
+  normal
+}
+
 model board {
   id          Int   @id @default(autoincrement())
   name        String   @db.VarChar(30)
   description String   @db.VarChar(500)
-  posts       post[]
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
+
+  user_id    Int
+  user       user      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  posts       post[]
 
   @@map("board")
 }
@@ -32,11 +65,15 @@ model post {
   id         Int    @id @default(autoincrement())
   title      String    @db.VarChar(100)
   content    String    @db.Text
-  board_id   Int
-  board      board     @relation(fields: [board_id], references: [id])
-  comments   comment[]
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
+
+  user_id    Int
+  user       user      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  board_id   Int
+  board      board     @relation(fields: [board_id], references: [id], onDelete: Cascade)
+
+  comments   comment[]
 
   @@map("post")
 }
@@ -44,10 +81,13 @@ model post {
 model comment {
   id         Int    @id @default(autoincrement())
   content    String    @db.VarChar(500)
-  post_id    Int
-  post       post      @relation(fields: [post_id], references: [id])
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
+
+  user_id    Int
+  user       user      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  post_id    Int
+  post       post      @relation(fields: [post_id], references: [id], onDelete: Cascade)
 
   @@map("comment")
 }
