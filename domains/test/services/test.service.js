@@ -3,42 +3,42 @@ import redisClient from '../../../common/utils/redisClient';
 
 const prisma = new PrismaClient();
 
-async function findTestList () {
-    return await prisma.test.findMany();
-} 
-
-async function createTest (data) {
-    const { title, content } = data;
-    return await prisma.test.create({
-        data: {
-          title,
-          content,
-        },
-    });
+async function findTestList() {
+  return await prisma.test.findMany();
 }
 
-async function updateTest (testId, data) {
-    const { title, content } = data;
-    return await prisma.test.update({
-        where: {
-            id: Number(testId),
-        },
-        data: {
-            title,
-            content,
-        },
-    });
+async function createTest(data) {
+  const { title, content } = data;
+  return await prisma.test.create({
+    data: {
+      title,
+      content,
+    },
+  });
 }
 
-async function deleteTest (testId) {
-    return await prisma.test.delete({
-        where: {
-            id: Number(testId),
-        }
-    });
+async function updateTest(testId, data) {
+  const { title, content } = data;
+  return await prisma.test.update({
+    where: {
+      id: Number(testId),
+    },
+    data: {
+      title,
+      content,
+    },
+  });
 }
 
-// Redis¸¦ »ç¿ëÇÏ´Â ÇÔ¼ö
+async function deleteTest(testId) {
+  return await prisma.test.delete({
+    where: {
+      id: Number(testId),
+    },
+  });
+}
+
+// Redisï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Ô¼ï¿½
 async function getFromCache(key) {
   try {
     const data = await redisClient.get(key);
@@ -58,12 +58,11 @@ async function setToCache(key, value) {
   }
 }
 
-
 export {
-    findTestList,
-    createTest,
-    updateTest,
-    deleteTest,
-    getFromCache,
-    setToCache
-}
+  findTestList,
+  createTest,
+  updateTest,
+  deleteTest,
+  getFromCache,
+  setToCache,
+};

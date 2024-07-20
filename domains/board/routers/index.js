@@ -11,7 +11,7 @@ const router = express.Router();
 // 게시판
 router.use('/', boardRouter);
 
-// 게시글 
+// 게시글
 router.use('/posts', PostRouter.postRouter);
 router.use('/:boardId/posts', PostRouter.postWithBoardIdRouter);
 

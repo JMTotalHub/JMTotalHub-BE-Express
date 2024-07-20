@@ -30,9 +30,6 @@ app.use('/auth', authRouter);
 app.use('/tests', testRouter);
 app.use('/boards', boardRouter);
 
-
-
-
 // 예외처리 미들웨어
 import errorHandler from './common/handler/error.js';
 import morgan from 'morgan';

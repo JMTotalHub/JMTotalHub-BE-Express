@@ -3,9 +3,11 @@ import app from '../../../app';
 import * as boardService from '../../../domains/board/services/board.service';
 import { PrismaClientKnownRequestError } from '@prisma/client';
 
-
 // Mock 데이터
-const mockBoardList = [{ id: 1, name: 'Board 1', description: 'Description 1' }, { id: 2, name: 'Board 2', description: 'Description 2' }];
+const mockBoardList = [
+  { id: 1, name: 'Board 1', description: 'Description 1' },
+  { id: 2, name: 'Board 2', description: 'Description 2' },
+];
 const mockBoard = { id: 1, name: 'Board 1', description: 'Description 1' };
 
 // Mock Service 설정
@@ -43,13 +45,19 @@ describe('Board Controller', () => {
 
     // 실패 시 테스트
     test('[실패] 게시판 단일 조회 / 없는 게시판 조회 시 - GET /boards/:boardId', async () => {
-      const error = new PrismaClientKnownRequestError('No board found', 'P2025', '2.0.0');
+      const error = new PrismaClientKnownRequestError(
+        'No board found',
+        'P2025',
+        '2.0.0'
+      );
       boardService.findBoard.mockRejectedValue(error);
 
       const response = await request(app).get('/boards/10');
 
       expect(response.status).toBe(500);
-      expect(response.body).toEqual({ 'Prisma(DataBase) error message': 'No board found' });
+      expect(response.body).toEqual({
+        'Prisma(DataBase) error message': 'No board found',
+      });
     });
   });
 
@@ -69,14 +77,23 @@ describe('Board Controller', () => {
 
   describe('게시판 수정 - PUT /boards/:boardId', () => {
     test('should update a board', async () => {
-      const updatedBoard = { id: 1, name: 'Updated Board', description: 'Updated Description' };
+      const updatedBoard = {
+        id: 1,
+        name: 'Updated Board',
+        description: 'Updated Description',
+      };
       boardService.updateBoard.mockResolvedValue(updatedBoard);
 
-      const response = await request(app).put('/boards/1').send({ name: 'Updated Board', description: 'Updated Description' });
+      const response = await request(app)
+        .put('/boards/1')
+        .send({ name: 'Updated Board', description: 'Updated Description' });
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual(updatedBoard);
-      expect(boardService.updateBoard).toHaveBeenCalledWith('1', { name: 'Updated Board', description: 'Updated Description' });
+      expect(boardService.updateBoard).toHaveBeenCalledWith('1', {
+        name: 'Updated Board',
+        description: 'Updated Description',
+      });
     });
   });
 

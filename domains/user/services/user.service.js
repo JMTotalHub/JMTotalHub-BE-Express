@@ -1,1 +1,1 @@
-import * as UserRepository from '../repositories/user.repository'
+import * as UserRepository from '../repositories/user.repository';

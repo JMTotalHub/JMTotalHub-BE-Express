@@ -1,25 +1,25 @@
-import passport from './passport-config.js'; // Passport ¼³Á¤ ÆÄÀÏ
+import passport from './passport-config.js'; // Passport ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
 const jwtAuthMiddleware = (excludedPaths = []) => {
   return (req, res, next) => {
-    // ¿äÃ» °æ·Î°¡ Á¦¿Ü °æ·Î Áß ÇÏ³ª·Î ½ÃÀÛÇÏ´ÂÁö È®ÀÎ
-    const isExcluded = excludedPaths.some(path => req.path.startsWith(path));
-    
+    // ï¿½ï¿½Ã» ï¿½ï¿½Î°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ï³ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ï¿½ï¿½ È®ï¿½ï¿½
+    const isExcluded = excludedPaths.some((path) => req.path.startsWith(path));
+
     if (isExcluded) {
-      return next(); // Á¦¿ÜµÈ °æ·Î´Â ÀÎÁõ °úÁ¤ ½ºÅµ
+      return next(); // ï¿½ï¿½ï¿½Üµï¿½ ï¿½ï¿½Î´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Åµ
     }
 
-    // ³ª¸ÓÁö °æ·Î´Â JWT ÀÎÁõ Àû¿ë
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Î´ï¿½ JWT ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     passport.authenticate('jwt', { session: false }, (err, user, info) => {
       if (err) {
         return next(err);
       }
       if (user) {
-        req.user = user; // ÀÎÁõµÈ »ç¿ëÀÚ °´Ã¼¸¦ req.user¿¡ ÀúÀå
+        req.user = user; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ req.userï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
       } else {
         return res.status(401).json({ message: 'Unauthorized' });
       }
-      next(); // ÀÎÁõ ¼º°ø ½Ã ¿äÃ»À» °è¼Ó ÁøÇà
+      next(); // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½Ã»ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     })(req, res, next);
   };
 };

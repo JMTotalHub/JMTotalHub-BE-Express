@@ -38,8 +38,7 @@ async function testRemove(req, res) {
   }
 }
 
-
-// Redis °ü·Ã ÄÁÆ®·Ñ·¯
+// Redis ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½Ñ·ï¿½
 async function getCacheValue(req, res) {
   try {
     const { key } = req.params;
@@ -59,7 +58,6 @@ async function setCacheValue(req, res) {
     res.status(500).json({ error: `An error occurred: ${error.message}` });
   }
 }
-
 
 export {
   testList,

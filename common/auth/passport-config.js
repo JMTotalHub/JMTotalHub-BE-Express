@@ -1,25 +1,27 @@
 import passport from 'passport';
-import  { Strategy, ExtractJwt } from 'passport-jwt';
+import { Strategy, ExtractJwt } from 'passport-jwt';
 
 import prisma from '../../prisma';
 
-// ¿É¼Ç ¼³Á¤
+// ï¿½É¼ï¿½ ï¿½ï¿½ï¿½ï¿½
 const opts = {
-  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // Bearer ÅäÅ« Çü½ÄÀ¸·Î JWT¸¦ ÃßÃâ
-  secretOrKey: 'your_jwt_secret', // ºñ¹Ð Å° µî·Ï
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // Bearer ï¿½ï¿½Å« ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ JWTï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+  secretOrKey: 'your_jwt_secret', // ï¿½ï¿½ï¿½ Å° ï¿½ï¿½ï¿½
 };
 
-passport.use(new Strategy(opts, async (jwt_payload, done) => {
-  try {
-    const user = await prisma.user.findUniqueOrThrow(jwt_payload.id);
-    if (user) {
-        // done ÇÔ¼ö´Â Passport Àü·«¿¡¼­ »ç¿ëÇÏ´Â ÄÝ¹é ÇÔ¼ö (¿¡·¯, À¯Àú°´Ã¼)
+passport.use(
+  new Strategy(opts, async (jwt_payload, done) => {
+    try {
+      const user = await prisma.user.findUniqueOrThrow(jwt_payload.id);
+      if (user) {
+        // done ï¿½Ô¼ï¿½ï¿½ï¿½ Passport ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Ý¹ï¿½ ï¿½Ô¼ï¿½ (ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã¼)
         return done(null, user);
+      }
+      return done(null, false);
+    } catch (error) {
+      return done(error, false);
     }
-    return done(null, false);
-  } catch (error) {
-    return done(error, false);
-  }
-}));
+  })
+);
 
 module.exports = passport;
