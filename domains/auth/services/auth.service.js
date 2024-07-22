@@ -24,18 +24,20 @@ export async function signInUser(bodyData) {
     throw new Error('Invalid password');
   }
 
+  // expiresIn 기준 https://github.com/vercel/ms
+
   // prettier-ignore
   const accessToken = jwt.sign(
     { id: user.id, email: user.email }, 
     process.env.JWT_SECRET, 
-    {expiresIn: getExpirationInSeconds(process.env.JWT_EXPIRATION),
+    {expiresIn: process.env.JWT_EXPIRATION,
   });
 
   // prettier-ignore
   const refreshToken = jwt.sign(
     { id: user.id, email: user.email }, 
     process.env.JWT_SECRET, 
-    {expiresIn: getExpirationInSeconds(process.env.REFRESH_TOKEN_EXPIRATION),}
+    {expiresIn: process.env.REFRESH_TOKEN_EXPIRATION,}
   );
 
   await redisClient.set(

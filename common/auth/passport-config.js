@@ -10,7 +10,6 @@ const opts = {
 
 passport.use(
   new Strategy(opts, async (jwt_payload, done) => {
-    console.log('JWT 페이로드:', jwt_payload);
     try {
       const user = await prisma.user.findUniqueOrThrow({
         where: {
@@ -18,13 +17,10 @@ passport.use(
         },
       });      
       if (user) {
-        console.log('사용자 찾음:', user);
         return done(null, user);
       }
-      console.log('사용자 찾지 못함');
       return done(null, false);
     } catch (error) {
-      console.error('에러 발생:', error);
       return done(error, false);
     }
   })

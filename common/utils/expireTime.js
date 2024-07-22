@@ -6,9 +6,13 @@ function getExpirationInSeconds(expiration) {
     if (unit === 'h') {
       return value * 60 * 60;
     } else if (unit === 'd') {
-      return value * 24 * 60 * 60; 
+      return value * 24 * 60 * 60;
+    } else if (unit === 'm') {
+      return value * 60;
+    } else if (unit === 's') {
+      return value;
     } else {
-      throw new Error('지원하지 않는 시간단위입니다.');
+      return parseInt(expiration);
     }
   }
 
