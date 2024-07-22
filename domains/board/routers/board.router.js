@@ -6,6 +6,7 @@ import escapeHtmlMiddleware from '../../../common/middleware/escape-html';
 
 import * as BoardController from '../controllers/board.controller';
 import * as BoardDto from '../dto/board.dto';
+import jwtAuthMiddleware from '../../../common/auth/jwtAuthMiddleware';
 
 const boardRouter = express.Router();
 

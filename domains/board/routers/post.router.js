@@ -6,6 +6,7 @@ import errorWrapper from '../../../common/error/error-wrapper';
 
 import * as PostController from '../controllers/post.controller';
 import * as PostDto from '../dto/post.dto';
+import jwtAuthMiddleware from '../../../common/auth/jwtAuthMiddleware';
 
 // => boards/posts
 const postRouter = express.Router();
@@ -20,6 +21,7 @@ postWithBoardIdRouter.get(
 
 postWithBoardIdRouter.post(
   '/',
+  jwtAuthMiddleware,
   escapeHtmlMiddleware,
   validationMiddleware(PostDto.PostCreateDto),
   errorWrapper(PostController.postAdd)

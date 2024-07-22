@@ -1,6 +1,7 @@
 import * as AuthRepository from '../repositories/auth.repository';
 
 import redisClient from '../../../common/utils/redisClient';
+import getExpirationInSeconds from '../../../common/utils/expireTime';
 
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
@@ -16,7 +17,7 @@ export async function signUpUser(bodyData) {
 export async function signInUser(bodyData) {
   const { email, password } = bodyData;
 
-  const user = AuthRepository.findUserByEmail(email);
+  const user = await AuthRepository.findUserByEmail(email);
   const isPasswordValid = await bcrypt.compare(password, user.password);
 
   if (!isPasswordValid) {
@@ -25,23 +26,23 @@ export async function signInUser(bodyData) {
 
   // prettier-ignore
   const accessToken = jwt.sign(
-    { email: user.email }, 
+    { id: user.id, email: user.email }, 
     process.env.JWT_SECRET, 
-    {expiresIn: process.env.JWT_EXPIRATION,
+    {expiresIn: getExpirationInSeconds(process.env.JWT_EXPIRATION),
   });
 
   // prettier-ignore
   const refreshToken = jwt.sign(
-    { email: user.email }, 
+    { id: user.id, email: user.email }, 
     process.env.JWT_SECRET, 
-    {expiresIn: process.env.REFRESH_TOKEN_EXPIRATION,
-  });
+    {expiresIn: getExpirationInSeconds(process.env.REFRESH_TOKEN_EXPIRATION),}
+  );
 
   await redisClient.set(
+    `refreshToken:${user.id}`,
     refreshToken,
-    user.email,
     'EX',
-    process.env.REFRESH_TOKEN_EXPIRATION
+    getExpirationInSeconds(process.env.REFRESH_TOKEN_EXPIRATION)
   );
 
   return {

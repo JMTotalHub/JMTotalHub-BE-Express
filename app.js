@@ -16,8 +16,8 @@ app.use(express.json());
 app.use(cors());
 
 // JWT 인증 미들웨어(제외할 경로만 써넣기)
-const excludedPaths = ['/tests', '/boards', '/auth'];
-app.use(jwtAuthMiddleware(excludedPaths));
+// const excludedPaths = ['/tests'];
+// app.use(jwtAuthMiddleware(excludedPaths));
 
 // 라우터 (도메인 분류)
 import authRouter from './domains/auth/routers';

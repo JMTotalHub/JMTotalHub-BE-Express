@@ -1,26 +1,19 @@
-import passport from './passport-config.js'; // Passport ���� ����
+import passport from './passport-config.js'; 
 
-const jwtAuthMiddleware = (excludedPaths = []) => {
-  return (req, res, next) => {
-    // ��û ��ΰ� ���� ��� �� �ϳ��� �����ϴ��� Ȯ��
-    const isExcluded = excludedPaths.some((path) => req.path.startsWith(path));
-
-    if (isExcluded) {
-      return next(); // ���ܵ� ��δ� ���� ���� ��ŵ
+const jwtAuthMiddleware = (req, res, next) => {
+  passport.authenticate('jwt', { session: false }, (err, user, info) => {
+    if (err) {
+      console.error('인증 중 에러 발생:', err);
+      next(err);
     }
-
-    // ������ ��δ� JWT ���� ����
-    passport.authenticate('jwt', { session: false }, (err, user, info) => {
-      if (err) {
-        return next(err);
-      }
-      if (user) {
-        req.user = user; // ������ ����� ��ü�� req.user�� ����
-      } else {
-        return res.status(401).json({ message: 'Unauthorized' });
-      }
-      next(); // ���� ���� �� ��û�� ��� ����
-    })(req, res, next);
-  };
+    if (user) {
+      console.log('사용자 인증 성공:', user);
+      req.user = user;
+      next(); 
+    } else {
+      console.log('인증 실패: Unauthorized');
+      return res.status(401).json({ message: 'Unauthorized - 사용자 인증 실패' });
+    }
+  })(req, res, next);
 };
 export default jwtAuthMiddleware;

@@ -45,7 +45,7 @@ async function findPostListByBoardId(boardId, queryData) {
   };
 }
 
-async function insertPost(boardId, bodyData) {
+async function insertPost(userId, boardId, bodyData) {
   const { title, content } = bodyData;
   console.log('repository!!!!');
   console.log(boardId);
@@ -55,6 +55,7 @@ async function insertPost(boardId, bodyData) {
       title,
       content,
       board_id: Number(boardId),
+      user_id: Number(userId)
     },
   });
 }

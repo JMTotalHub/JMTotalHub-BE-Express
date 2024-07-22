@@ -9,5 +9,5 @@ export async function userSingUp(req, res) {
 export async function userSingIn(req, res) {
   const bodyData = req.body;
   const certifiedUser = await AuthService.signInUser(bodyData);
-  res.status(201).json(certifiedUser);
+  res.status(200).json(certifiedUser);
 }
