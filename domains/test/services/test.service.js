@@ -1,64 +1,44 @@
 import { PrismaClient } from '@prisma/client';
+import redisClient from '../../../common/utils/redisClient';
 
 const prisma = new PrismaClient();
 
-async function findTestList () {
-    return await prisma.test.findMany();
-} 
-
-async function createTest (data) {
-    const { title, content } = data;
-    return await prisma.test.create({
-        data: {
-          title,
-          content,
-        },
-    });
+async function findTestList() {
+  return await prisma.test.findMany();
 }
 
-async function updateTest (testId, data) {
-    const { title, content } = data;
-    return await prisma.test.update({
-        where: {
-            id: Number(testId),
-        },
-        data: {
-            title,
-            content,
-        },
-    });
-}
-
-async function deleteTest (testId) {
-    return await prisma.test.delete({
-        where: {
-            id: Number(testId),
-        }
-    });
-}
-
-// ¾Æ·¡ Redis Å×½ºÆ®
-import dotenv from 'dotenv';
-import { createClient } from 'redis';
-
-dotenv.config();
-
-// Redis Å¬¶óÀÌ¾ðÆ® »ý¼º
-const redisClient = createClient({
-  url: `redis://${process.env.REDIS_URL}:${process.env.REDIS_PORT}`,
-  password: process.env.REDIS_PASSWORD,
-});
-
-// Redis ¿¬°á
-redisClient.connect()
-  .then(() => {
-    console.log('Connected to Redis');
-  })
-  .catch((err) => {
-    console.error('Error connecting to Redis:', err);
+async function createTest(data) {
+  const { title, content } = data;
+  return await prisma.test.create({
+    data: {
+      title,
+      content,
+    },
   });
+}
 
-// Redis¸¦ »ç¿ëÇÏ´Â ÇÔ¼ö
+async function updateTest(testId, data) {
+  const { title, content } = data;
+  return await prisma.test.update({
+    where: {
+      id: Number(testId),
+    },
+    data: {
+      title,
+      content,
+    },
+  });
+}
+
+async function deleteTest(testId) {
+  return await prisma.test.delete({
+    where: {
+      id: Number(testId),
+    },
+  });
+}
+
+// Redisï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Ô¼ï¿½
 async function getFromCache(key) {
   try {
     const data = await redisClient.get(key);
@@ -78,12 +58,11 @@ async function setToCache(key, value) {
   }
 }
 
-
 export {
-    findTestList,
-    createTest,
-    updateTest,
-    deleteTest,
-    getFromCache,
-    setToCache
-}
+  findTestList,
+  createTest,
+  updateTest,
+  deleteTest,
+  getFromCache,
+  setToCache,
+};

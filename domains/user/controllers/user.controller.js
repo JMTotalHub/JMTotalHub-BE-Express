@@ -1,1 +1,1 @@
-import * as UserService from '../services/user.service'
+import * as UserService from '../services/user.service';
