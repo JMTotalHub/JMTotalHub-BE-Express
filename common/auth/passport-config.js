@@ -5,7 +5,7 @@ import prisma from '../../prisma';
 
 const opts = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), 
-  secretOrKey: process.env.JWT_SECRET,
+  secretOrKey: process.env.JWT_SECRET_KEY,
 };
 
 passport.use(

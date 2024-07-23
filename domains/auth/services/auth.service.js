@@ -29,14 +29,14 @@ export async function signInUser(bodyData) {
   // prettier-ignore
   const accessToken = jwt.sign(
     { id: user.id, email: user.email }, 
-    process.env.JWT_SECRET, 
+    process.env.JWT_SECRET_KEY, 
     {expiresIn: process.env.JWT_EXPIRATION,
   });
 
   // prettier-ignore
   const refreshToken = jwt.sign(
     { id: user.id, email: user.email }, 
-    process.env.JWT_SECRET, 
+    process.env.JWT_SECRET_KEY, 
     {expiresIn: process.env.REFRESH_TOKEN_EXPIRATION,}
   );
 
@@ -69,7 +69,7 @@ export async function generateNewAccessToken(headerData) {
   }
 
   try {
-    jwt.verify(oldAccessToken, process.env.JWT_SECRET)
+    jwt.verify(oldAccessToken, process.env.JWT_SECRET_KEY)
   } catch (error) {
     if(error.name == 'TokenExpiredError') {
       oldPayload = jwt.decode(oldAccessToken);
@@ -88,14 +88,14 @@ export async function generateNewAccessToken(headerData) {
   }
 
   try {
-    jwt.verify(refreshToken, process.env.JWT_SECRET);
+    jwt.verify(refreshToken, process.env.JWT_SECRET_KEY);
   } catch (error) {
     throw new Error('Invalid refresh token: ' + error.name);
   }
 
   const newAccessToken = jwt.sign(
     { id: oldPayload.id, email: oldPayload.email }, 
-    process.env.JWT_SECRET, 
+    process.env.JWT_SECRET_KEY, 
     { expiresIn: process.env.JWT_EXPIRATION }
   );
 
