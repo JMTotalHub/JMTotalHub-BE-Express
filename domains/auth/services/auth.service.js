@@ -30,21 +30,21 @@ export async function signInUser(bodyData) {
   const accessToken = jwt.sign(
     { id: user.id, email: user.email }, 
     process.env.JWT_SECRET_KEY, 
-    {expiresIn: process.env.JWT_EXPIRATION,
+    {expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRATION,
   });
 
   // prettier-ignore
   const refreshToken = jwt.sign(
     { id: user.id, email: user.email }, 
     process.env.JWT_SECRET_KEY, 
-    {expiresIn: process.env.REFRESH_TOKEN_EXPIRATION,}
+    {expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRATION,}
   );
 
   await redisClient.set(
     `refreshToken:${user.id}`,
     refreshToken,
     'EX',
-    getExpirationInSeconds(process.env.REFRESH_TOKEN_EXPIRATION)
+    getExpirationInSeconds(process.env.JWT_REFRESH_TOKEN_EXPIRATION)
   );
 
   return {
@@ -96,7 +96,7 @@ export async function generateNewAccessToken(headerData) {
   const newAccessToken = jwt.sign(
     { id: oldPayload.id, email: oldPayload.email }, 
     process.env.JWT_SECRET_KEY, 
-    { expiresIn: process.env.JWT_EXPIRATION }
+    { expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRATION }
   );
 
   return newAccessToken;
