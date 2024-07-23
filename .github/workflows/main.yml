@@ -10,56 +10,59 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check out the repository
-      uses: actions/checkout@v2
-      
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '20.14.0' 
+      - name: Check out the repository
+        uses: actions/checkout@v2
 
-    - name: Install dependencies
-      run: npm install
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20.14.0'
 
-    - name: Run tests
-      env:
-        DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        REDIS_URL: ${{ secrets.REDIS_URL }}
-        REDIS_PORT: ${{ secrets.REDIS_PORT }}
-        REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
-      run: npm test
-    
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+      - name: Install dependencies
+        run: npm install
 
-    - name: Log in to Docker Hub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-        
-    - name: Build and push Docker image
-      uses: docker/build-push-action@v2
-      with:
-        context: .
-        file: ./Dockerfile
-        push: true
-        tags: ${{ secrets.DOCKER_USERNAME }}/jm-total-hub:express-latest
+      - name: Run tests
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          REDIS_URL: ${{ secrets.REDIS_URL }}
+          REDIS_PORT: ${{ secrets.REDIS_PORT }}
+          REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+        run: npm test
 
-    - name: Deploy to EC2
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ${{ secrets.EC2_USERNAME }}
-        key: ${{ secrets.EC2_PRIVATE_KEY }}
-        script: |
-          docker image prune -a -f --filter "until=12h"
-          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          export DATABASE_URL=${{ secrets.DATABASE_URL }}
-          export REDIS_URL=${{ secrets.REDIS_URL }}
-          export REDIS_PORT=${{ secrets.REDIS_PORT }}
-          export REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
-          cd JMTotalHub-DockerCompose
-          sudo -E docker-compose pull express 
-          sudo -E docker-compose up -d express  
-          sudo -E docker-compose logs express
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/jm-total-hub:express-latest
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          script: |
+            docker image prune -a -f --filter "until=12h"
+            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+            export DATABASE_URL=${{ secrets.DATABASE_URL }}
+            export REDIS_URL=${{ secrets.REDIS_URL }}
+            export REDIS_PORT=${{ secrets.REDIS_PORT }}
+            export REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
+            JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
+            JWT_ACCESS_TOKEN_EXPIRATION=${{ secrets.JWT_ACCESS_TOKEN_EXPIRATION }}
+            JWT_REFRESH_TOKEN_EXPIRATION=${{ secrets.JWT_REFRESH_TOKEN_EXPIRATION }}
+            cd JMTotalHub-DockerCompose
+            sudo -E docker-compose pull express 
+            sudo -E docker-compose up -d express  
+            sudo -E docker-compose logs express
