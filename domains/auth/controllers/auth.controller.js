@@ -11,3 +11,9 @@ export async function userSingIn(req, res) {
   const certifiedUser = await AuthService.signInUser(bodyData);
   res.status(200).json(certifiedUser);
 }
+
+export async function NewAccessTokenGenerate(req, res) {
+  const headerData = req.headers
+  const newAccessToken = await AuthService.generateNewAccessToken(headerData);
+  res.status(200).json(newAccessToken);
+}

@@ -55,3 +55,49 @@ export async function signInUser(bodyData) {
     },
   };
 }
+
+
+export async function generateNewAccessToken(headerData) {
+  
+  let oldAccessToken = null;
+  let oldPayload = null;
+
+  try {
+    oldAccessToken = headerData['authorization'].split(' ')[1];
+  } catch (error) {
+    throw new Error('Old Access token not found: ' + error.name)
+  }
+
+  try {
+    jwt.verify(oldAccessToken, process.env.JWT_SECRET)
+  } catch (error) {
+    if(error.name == 'TokenExpiredError') {
+      oldPayload = jwt.decode(oldAccessToken);
+    } else {
+      throw new Error('Invalid Access Token: ' + error.name)
+    }
+  }
+
+  if(oldPayload == null) 
+    return;
+
+  const refreshToken = await redisClient.get(`refreshToken:${oldPayload.id}`);
+
+  if (!refreshToken) {
+    throw new Error('Refresh token not found');
+  }
+
+  try {
+    jwt.verify(refreshToken, process.env.JWT_SECRET);
+  } catch (error) {
+    throw new Error('Invalid refresh token: ' + error.name);
+  }
+
+  const newAccessToken = jwt.sign(
+    { id: oldPayload.id, email: oldPayload.email }, 
+    process.env.JWT_SECRET, 
+    { expiresIn: process.env.JWT_EXPIRATION }
+  );
+
+  return newAccessToken;
+}
