@@ -27,6 +27,9 @@ jobs:
           REDIS_URL: ${{ secrets.REDIS_URL }}
           REDIS_PORT: ${{ secrets.REDIS_PORT }}
           REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+          JWT_ACCESS_TOKEN_EXPIRATION: ${{ secrets.JWT_ACCESS_TOKEN_EXPIRATION }}
+          JWT_REFRESH_TOKEN_EXPIRATION: ${{ secrets.JWT_REFRESH_TOKEN_EXPIRATION }}
         run: npm test
 
       - name: Set up Docker Buildx
@@ -59,9 +62,9 @@ jobs:
             export REDIS_URL=${{ secrets.REDIS_URL }}
             export REDIS_PORT=${{ secrets.REDIS_PORT }}
             export REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
-            JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
-            JWT_ACCESS_TOKEN_EXPIRATION=${{ secrets.JWT_ACCESS_TOKEN_EXPIRATION }}
-            JWT_REFRESH_TOKEN_EXPIRATION=${{ secrets.JWT_REFRESH_TOKEN_EXPIRATION }}
+            export JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
+            export JWT_ACCESS_TOKEN_EXPIRATION=${{ secrets.JWT_ACCESS_TOKEN_EXPIRATION }}
+            export JWT_REFRESH_TOKEN_EXPIRATION=${{ secrets.JWT_REFRESH_TOKEN_EXPIRATION }}
             cd JMTotalHub-DockerCompose
             sudo -E docker-compose pull express 
             sudo -E docker-compose up -d express  
