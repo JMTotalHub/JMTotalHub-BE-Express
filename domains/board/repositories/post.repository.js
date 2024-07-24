@@ -55,7 +55,7 @@ async function insertPost(userId, boardId, bodyData) {
       title,
       content,
       board_id: Number(boardId),
-      user_id: Number(userId)
+      user_id: Number(userId),
     },
   });
 }

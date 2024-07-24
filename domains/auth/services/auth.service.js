@@ -56,33 +56,32 @@ export async function signInUser(bodyData) {
   };
 }
 
-
-export async function generateNewAccessToken(headerData) {
-  
-  let oldAccessToken = null;
+export async function generateNewAccessToken(oldAccessToken) {
   let oldPayload = null;
 
-  try {
-    // oldAccessToken = headerData['authorization'].split(' ')[1];
-    // oldAccessToken = req.cookies['accessToken'];
-    // console.log('oldAccessToken : ', oldAccessToken);
-    console.log(req.headers.cookie);
-  } catch (error) {
-    throw new Error('Old Access token not found: ' + error.name)
+  if (!oldAccessToken) {
+    return;
   }
 
   try {
-    jwt.verify(oldAccessToken, process.env.JWT_SECRET_KEY)
+    oldPayload = jwt.verify(oldAccessToken, process.env.JWT_SECRET_KEY);
   } catch (error) {
-    if(error.name == 'TokenExpiredError') {
+    if (error.name === 'TokenExpiredError') {
+      // 토큰이 만료된 경우
       oldPayload = jwt.decode(oldAccessToken);
+      // oldPayload를 사용하여 새로운 토큰을 발급하는 로직을 추가합니다.
+    } else if (error.name === 'JsonWebTokenError') {
+      // 토큰이 유효하지 않은 경우
+      throw new Error('Invalid Access Token: ' + error.message);
     } else {
-      throw new Error('Invalid Access Token: ' + error.name)
+      // 다른 에러 발생 시
+      throw new Error('Token verification failed: ' + error.message);
     }
   }
 
-  if(oldPayload == null) 
-    return;
+  console.log('oldPayload : ', oldPayload);
+
+  if (oldPayload == null) return;
 
   const refreshToken = await redisClient.get(`refreshToken:${oldPayload.id}`);
 
@@ -93,12 +92,13 @@ export async function generateNewAccessToken(headerData) {
   try {
     jwt.verify(refreshToken, process.env.JWT_SECRET_KEY);
   } catch (error) {
+    // 여기서 TokenExpiredError 으로 리플래쉬토큰 만료 처리 필요
     throw new Error('Invalid refresh token: ' + error.name);
   }
 
   const newAccessToken = jwt.sign(
-    { id: oldPayload.id, email: oldPayload.email }, 
-    process.env.JWT_SECRET_KEY, 
+    { id: oldPayload.id, email: oldPayload.email },
+    process.env.JWT_SECRET_KEY,
     { expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRATION }
   );
 
