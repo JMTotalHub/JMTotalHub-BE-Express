@@ -1,6 +1,11 @@
 import passport from './passport-config.js'; 
 
 const jwtAuthMiddleware = (req, res, next) => {
+
+  console.log(req.header('accessToken'));
+  const token =  req.headers.cookie;
+  console.log('JWT Token from cookie:', token);
+
   // err : 인증과정 오류 - 데이터베이스 연결, 코드오류, 인증과 관계없는 부분의 에러
   // user : 인증이 완료되면 사용자 정보 반환
   // info : 인증 실패 - 토큰등의 문제로 인증고 ㅏ관련있는 부분의 에러 (name, message 등을 속성으로 갖는다.)
