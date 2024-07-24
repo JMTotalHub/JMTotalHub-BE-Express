@@ -14,8 +14,6 @@ export async function userSingIn(req, res) {
 
   res.cookie('accessToken', accessToken, {
     httpOnly: true,
-    // secure: true, // https 연결에만 쿠키가 전송되는 옵션
-    maxAge: getExpirationInSeconds(process.env.JWT_ACCESS_TOKEN_EXPIRATION) * 1000 // 밀리초 단위여서
   })
   res.status(200).json(certifiedUser);
 }
@@ -23,5 +21,9 @@ export async function userSingIn(req, res) {
 export async function NewAccessTokenGenerate(req, res) {
   const headerData = req.headers
   const newAccessToken = await AuthService.generateNewAccessToken(headerData);
-  res.status(200).json(newAccessToken);
+  
+  res.cookie('accessToken', newAccessToken, {
+    httpOnly: true,
+  })
+  res.status(200).json('재발급 완료');
 }

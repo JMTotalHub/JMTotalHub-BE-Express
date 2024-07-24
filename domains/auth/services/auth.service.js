@@ -63,7 +63,10 @@ export async function generateNewAccessToken(headerData) {
   let oldPayload = null;
 
   try {
-    oldAccessToken = headerData['authorization'].split(' ')[1];
+    // oldAccessToken = headerData['authorization'].split(' ')[1];
+    // oldAccessToken = req.cookies['accessToken'];
+    // console.log('oldAccessToken : ', oldAccessToken);
+    console.log(req.headers.cookie);
   } catch (error) {
     throw new Error('Old Access token not found: ' + error.name)
   }
