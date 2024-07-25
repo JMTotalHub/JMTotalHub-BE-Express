@@ -12,8 +12,8 @@ const cookieExtractor = (req) => {
 };
 
 const opts = {
-  // jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), 
-  jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]), 
+  // jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
   secretOrKey: process.env.JWT_SECRET_KEY,
 };
 
@@ -24,7 +24,7 @@ passport.use(
         where: {
           id: jwt_payload.id,
         },
-      });      
+      });
       if (user) {
         return done(null, user);
       }

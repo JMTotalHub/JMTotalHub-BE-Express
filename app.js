@@ -3,7 +3,6 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
 
-
 // 환경 변수 설정
 dotenv.config();
 
@@ -13,12 +12,13 @@ const app = express();
 // 미들웨어
 app.use(morgan('dev'));
 app.use(express.json());
-app.use(cors({
-  origin: `${process.env.REACT_URL}:${process.env.REACT_PORT}`,  // 클라이언트 도메인
-  credentials: true,   // 쿠키를 포함한 요청 허용
-}));
+app.use(
+  cors({
+    origin: `${process.env.REACT_URL}:${process.env.REACT_PORT}`, // 클라이언트 도메인
+    credentials: true, // 쿠키를 포함한 요청 허용
+  })
+);
 app.use(cookieParser());
-
 
 // JWT 인증 미들웨어(제외할 경로만 써넣기)
 // const excludedPaths = ['/tests'];

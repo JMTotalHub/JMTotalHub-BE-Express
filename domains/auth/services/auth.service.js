@@ -56,9 +56,7 @@ export async function signInUser(bodyData) {
   };
 }
 
-
 export async function generateNewAccessToken(headerData) {
-  
   let oldAccessToken = null;
   let oldPayload = null;
 
@@ -68,21 +66,20 @@ export async function generateNewAccessToken(headerData) {
     // console.log('oldAccessToken : ', oldAccessToken);
     console.log(req.headers.cookie);
   } catch (error) {
-    throw new Error('Old Access token not found: ' + error.name)
+    throw new Error('Old Access token not found: ' + error.name);
   }
 
   try {
-    jwt.verify(oldAccessToken, process.env.JWT_SECRET_KEY)
+    jwt.verify(oldAccessToken, process.env.JWT_SECRET_KEY);
   } catch (error) {
-    if(error.name == 'TokenExpiredError') {
+    if (error.name == 'TokenExpiredError') {
       oldPayload = jwt.decode(oldAccessToken);
     } else {
-      throw new Error('Invalid Access Token: ' + error.name)
+      throw new Error('Invalid Access Token: ' + error.name);
     }
   }
 
-  if(oldPayload == null) 
-    return;
+  if (oldPayload == null) return;
 
   const refreshToken = await redisClient.get(`refreshToken:${oldPayload.id}`);
 
@@ -97,8 +94,8 @@ export async function generateNewAccessToken(headerData) {
   }
 
   const newAccessToken = jwt.sign(
-    { id: oldPayload.id, email: oldPayload.email }, 
-    process.env.JWT_SECRET_KEY, 
+    { id: oldPayload.id, email: oldPayload.email },
+    process.env.JWT_SECRET_KEY,
     { expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRATION }
   );
 
