@@ -10,11 +10,9 @@ export async function userSingUp(req, res) {
 export async function userSingIn(req, res) {
   const bodyData = req.body;
   const { accessToken, certifiedUser } = await AuthService.signInUser(bodyData);
-  const { accessToken, certifiedUser } = await AuthService.signInUser(bodyData);
 
   res.cookie('accessToken', accessToken, {
     httpOnly: true,
-  });
   });
   res.status(200).json(certifiedUser);
 }

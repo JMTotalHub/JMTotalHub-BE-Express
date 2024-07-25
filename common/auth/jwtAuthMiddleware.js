@@ -1,5 +1,4 @@
 import passport from './passport-config.js';
-import passport from './passport-config.js';
 
 const jwtAuthMiddleware = (req, res, next) => {
   // err : 인증과정 오류 - 데이터베이스 연결, 코드오류, 인증과 관계없는 부분의 에러
@@ -8,10 +7,6 @@ const jwtAuthMiddleware = (req, res, next) => {
   passport.authenticate('jwt', { session: false }, (err, user, info) => {
     if (err) {
       return res.status(401).json({
-      return res.status(401).json({
-        err: err,
-        message: '사용자 인증확인 중 에러발생',
-      });
         message: '사용자 인증확인 중 에러발생',
       });
     }
@@ -24,19 +19,12 @@ const jwtAuthMiddleware = (req, res, next) => {
       if (info && info.name === 'TokenExpiredError') {
         console.log('토큰 만료됨');
         return res.status(401).json({
-        console.log('토큰 만료됨');
-        return res.status(401).json({
           err: info.name,
-          message: 'Access Token 기간 만료',
-        });
           message: 'Access Token 기간 만료',
         });
       } else {
         return res.status(401).json({
-        return res.status(401).json({
           err: info.name,
-          message: '인증내용에 문제 발생',
-        });
           message: '인증내용에 문제 발생',
         });
       }
