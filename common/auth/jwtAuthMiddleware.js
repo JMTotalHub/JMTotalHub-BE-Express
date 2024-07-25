@@ -7,13 +7,13 @@ const jwtAuthMiddleware = (req, res, next) => {
   passport.authenticate('jwt', { session: false }, (err, user, info) => {
     if (err) {
       return res.status(401).json({
+        err: err,
         message: '사용자 인증확인 중 에러발생',
       });
     }
     console.log('passport 에러 발생 안함 : ' + user);
     if (user) {
       req.user = user;
-      next();
       next();
     } else {
       if (info && info.name === 'TokenExpiredError') {
