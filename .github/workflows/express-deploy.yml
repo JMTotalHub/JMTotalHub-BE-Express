@@ -13,7 +13,7 @@ jobs:
       - name: 서버 레포지토리 코드 체크아웃
         uses: actions/checkout@v2
         with:
-          repository: junmo95/JMTotalHub-Server
+          repository: JMTotalHub/JMTotalHub-Server
           path: JMTotalHub-Server
 
       - name: express 폴더 생성(있으면 무시)
