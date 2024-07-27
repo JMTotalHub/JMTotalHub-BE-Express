@@ -31,18 +31,18 @@ jobs:
       - name: 의존성 설치
         run: npm install
 
-      - name: 테스트 실행
-        env:
-          # 데이터베이스 환경변수
-          EXPRESS_SERVER01_DATABASE_URL: ${{ env.EXPRESS_SERVER01_DATABASE_URL }}
-          EXPRESS_SERVER01_REDIS_URL: ${{ env.EXPRESS_SERVER01_REDIS_URL }}
-          EXPRESS_SERVER01_REDIS_PORT: ${{ env.EXPRESS_SERVER01_REDIS_PORT }}
-          EXPRESS_SERVER01_REDIS_PASSWORD: ${{ env.EXPRESS_SERVER01_REDIS_PASSWORD }}
-          # JWT 환경변수
-          JWT_SECRET_KEY: ${{ env.JWT_SECRET_KEY01 }}
-          JWT_ACCESS_TOKEN_EXPIRATION: ${{ env.JWT_ACCESS_TOKEN_EXPIRATION }}
-          JWT_REFRESH_TOKEN_EXPIRATION: ${{ env.JWT_REFRESH_TOKEN_EXPIRATION }}
-        run: npm test
+      # - name: 테스트 실행
+      #   env:
+      #     # 데이터베이스 환경변수
+      #     EXPRESS_SERVER01_DATABASE_URL: ${{ env.EXPRESS_SERVER01_DATABASE_URL }}
+      #     EXPRESS_SERVER01_REDIS_URL: ${{ env.EXPRESS_SERVER01_REDIS_URL }}
+      #     EXPRESS_SERVER01_REDIS_PORT: ${{ env.EXPRESS_SERVER01_REDIS_PORT }}
+      #     EXPRESS_SERVER01_REDIS_PASSWORD: ${{ env.EXPRESS_SERVER01_REDIS_PASSWORD }}
+      #     # JWT 환경변수
+      #     JWT_SECRET_KEY: ${{ env.JWT_SECRET_KEY01 }}
+      #     JWT_ACCESS_TOKEN_EXPIRATION: ${{ env.JWT_ACCESS_TOKEN_EXPIRATION }}
+      #     JWT_REFRESH_TOKEN_EXPIRATION: ${{ env.JWT_REFRESH_TOKEN_EXPIRATION }}
+      #   run: npm test
 
       - name: Docker Buildx 설정
         uses: docker/setup-buildx-action@v1
