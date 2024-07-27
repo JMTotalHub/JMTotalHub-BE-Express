@@ -10,32 +10,18 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: 서버 레포지토리 코드 체크아웃
-        uses: actions/checkout@v2
-        with:
-          repository: JMTotalHub/JMTotalHub-Server
-          path: JMTotalHub-Server
+      - name: 코드 체크아웃
+        uses: actions/checkout@v3
 
-      - name: express 폴더 생성(있으면 무시)
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.EXPRESS_SERVER01_EC2_HOST }}
-          username: ${{ secrets.EXPRESS_SERVER01_EC2_USERNAME }}
-          key: ${{ secrets.EXPRESS_SERVER01_EC2_PRIVATE_KEY }}
-          script: |
-            mkdir -p ~/express
-
-      - name: express폴더내용 ec2서버 express폴더에 업로드 (최신화)
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.EXPRESS_SERVER01_EC2_HOST }}
-          username: ${{ secrets.EXPRESS_SERVER01_EC2_USERNAME }}
-          key: ${{ secrets.EXPRESS_SERVER01_EC2_PRIVATE_KEY }}
-          source: "JMTotalHub-Server/express/*"
-          target: "~/express/"
-
-      - name: express 레포지토리 코드 체크아웃
-        uses: actions/checkout@v2
+      - name: 환경 변수 로드
+        id: load-env
+        run: |
+          echo "${{ secrets.EXPRESS_SERVER01_ENV }}" | while IFS= read -r line; do
+            # 주석과 빈 줄 무시
+            if [[ -n "$line" && "$line" != \#* ]]; then
+              echo "$line" >> $GITHUB_ENV
+            fi
+          done
 
       - name: Node 설치
         uses: actions/setup-node@v2
@@ -48,14 +34,14 @@ jobs:
       - name: 테스트 실행
         env:
           # 데이터베이스 환경변수
-          DATABASE_URL: ${{ secrets.EXPRESS_SERVER01_DATABASE_URL }}
-          REDIS_URL: ${{ secrets.EXPRESS_SERVER01_REDIS_URL }}
-          REDIS_PORT: ${{ secrets.EXPRESS_SERVER01_REDIS_PORT }}
-          REDIS_PASSWORD: ${{ secrets.EXPRESS_SERVER01_REDIS_PASSWORD }}
+          EXPRESS_SERVER01_DATABASE_URL: ${{ env.EXPRESS_SERVER01_DATABASE_URL }}
+          EXPRESS_SERVER01_REDIS_URL: ${{ env.EXPRESS_SERVER01_REDIS_URL }}
+          EXPRESS_SERVER01_REDIS_PORT: ${{ env.EXPRESS_SERVER01_REDIS_PORT }}
+          EXPRESS_SERVER01_REDIS_PASSWORD: ${{ env.EXPRESS_SERVER01_REDIS_PASSWORD }}
           # JWT 환경변수
-          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
-          JWT_ACCESS_TOKEN_EXPIRATION: ${{ secrets.JWT_ACCESS_TOKEN_EXPIRATION }}
-          JWT_REFRESH_TOKEN_EXPIRATION: ${{ secrets.JWT_REFRESH_TOKEN_EXPIRATION }}
+          JWT_SECRET_KEY: ${{ env.JWT_SECRET_KEY01 }}
+          JWT_ACCESS_TOKEN_EXPIRATION: ${{ env.JWT_ACCESS_TOKEN_EXPIRATION }}
+          JWT_REFRESH_TOKEN_EXPIRATION: ${{ env.JWT_REFRESH_TOKEN_EXPIRATION }}
         run: npm test
 
       - name: Docker Buildx 설정
@@ -78,22 +64,22 @@ jobs:
       - name: EC2 배포
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.EXPRESS_SERVER01_EC2_HOST }}
-          username: ${{ secrets.EXPRESS_SERVER01_EC2_USERNAME }}
+          host: ${{ env.EXPRESS_SERVER01_EC2_HOST }}
+          username: ${{ env.EXPRESS_SERVER01_EC2_USERNAME }}
           key: ${{ secrets.EXPRESS_SERVER01_EC2_PRIVATE_KEY }}
           script: |
             docker image prune -a -f --filter "until=12h"
             docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
             # 데이터베이스 환경변수
-            export DATABASE_URL=${{ secrets.EXPRESS_SERVER01_DATABASE_URL }}
-            export REDIS_URL=${{ secrets.EXPRESS_SERVER01_REDIS_URL }}
-            export REDIS_PORT=${{ secrets.EXPRESS_SERVER01_REDIS_PORT }}
-            export REDIS_PASSWORD=${{ secrets.EXPRESS_SERVER01_REDIS_PASSWORD }}
+            export EXPRESS_SERVER01_DATABASE_URL=${{ env.EXPRESS_SERVER01_DATABASE_URL }}
+            export EXPRESS_SERVER01_REDIS_URL=${{ env.EXPRESS_SERVER01_REDIS_URL }}
+            export EXPRESS_SERVER01_REDIS_PORT=${{ env.EXPRESS_SERVER01_REDIS_PORT }}
+            export EXPRESS_SERVER01_REDIS_PASSWORD=${{ env.EXPRESS_SERVER01_REDIS_PASSWORD }}
             # JWT 환경변수
-            export JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
-            export JWT_ACCESS_TOKEN_EXPIRATION=${{ secrets.JWT_ACCESS_TOKEN_EXPIRATION }}
-            export JWT_REFRESH_TOKEN_EXPIRATION=${{ secrets.JWT_REFRESH_TOKEN_EXPIRATION }}
-            cd JMTotalHub-DockerCompose
+            export JWT_SECRET_KEY01=${{ env.JWT_SECRET_KEY01 }}
+            export JWT_ACCESS_TOKEN_EXPIRATION=${{ env.JWT_ACCESS_TOKEN_EXPIRATION }}
+            export JWT_REFRESH_TOKEN_EXPIRATION=${{ env.JWT_REFRESH_TOKEN_EXPIRATION }}
+            cd express
             sudo -E docker-compose pull express 
             sudo -E docker-compose up -d express  
             sudo -E docker-compose logs express
