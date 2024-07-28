@@ -34,6 +34,10 @@ app.use('/auth', authRouter);
 app.use('/tests', testRouter);
 app.use('/boards', boardRouter);
 
+app.get('/connect-test', (req, res) => {
+  res.send('서버 연결 완료');
+});
+
 // 예외처리 미들웨어
 import morgan from 'morgan';
 import errorHandler from './common/handler/error.js';
