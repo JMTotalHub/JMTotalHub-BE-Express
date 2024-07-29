@@ -29,14 +29,14 @@ export async function signInUser(bodyData) {
   // prettier-ignore
   const accessToken = jwt.sign(
     { id: user.id, email: user.email }, 
-    process.env.JWT_SECRET_KEY, 
+    process.env.JWT_SECRET_KEY01, 
     {expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRATION,
   });
 
   // prettier-ignore
   const refreshToken = jwt.sign(
     { id: user.id, email: user.email }, 
-    process.env.JWT_SECRET_KEY, 
+    process.env.JWT_SECRET_KEY01, 
     {expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRATION,}
   );
 
@@ -64,7 +64,7 @@ export async function generateNewAccessToken(oldAccessToken) {
   }
 
   try {
-    oldPayload = jwt.verify(oldAccessToken, process.env.JWT_SECRET_KEY);
+    oldPayload = jwt.verify(oldAccessToken, process.env.JWT_SECRET_KEY01);
   } catch (error) {
     if (error.name === 'TokenExpiredError') {
       // 토큰이 만료된 경우
@@ -90,7 +90,7 @@ export async function generateNewAccessToken(oldAccessToken) {
   }
 
   try {
-    jwt.verify(refreshToken, process.env.JWT_SECRET_KEY);
+    jwt.verify(refreshToken, process.env.JWT_SECRET_KEY01);
   } catch (error) {
     // 여기서 TokenExpiredError 으로 리플래쉬토큰 만료 처리 필요
     throw new Error('Invalid refresh token: ' + error.name);
@@ -98,7 +98,7 @@ export async function generateNewAccessToken(oldAccessToken) {
 
   const newAccessToken = jwt.sign(
     { id: oldPayload.id, email: oldPayload.email },
-    process.env.JWT_SECRET_KEY,
+    process.env.JWT_SECRET_KEY01,
     { expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRATION }
   );
 
