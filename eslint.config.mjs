@@ -16,6 +16,7 @@ export default [
   {
     plugins: { prettier: prettierPlugin },
     rules: { 'prettier/prettier': 'error' },
+    'linebreak-style': ['error', 'unix'],
   },
   {
     ignores: [
