@@ -1,12 +1,3 @@
-generator client {
-  provider = "prisma-client-js"
-}
-
-datasource db {
-  provider = "mysql"
-  url      = env("EXPRESS_SERVER01_DATABASE_URL")
-}
-
 model test {
   id         Int      @id @default(autoincrement()) 
   title      String   @db.VarChar(100)
@@ -15,35 +6,6 @@ model test {
   updated_at DateTime @updatedAt
 
   @@map("test")
-}
-
-model user {
-  id         Int       @id @default(autoincrement())
-  email      String    @unique
-  password   String
-  loginType  LoginType
-  providerId String?
-  roleType   RoleType     
-  created_at  DateTime  @default(now())
-  updated_at  DateTime  @updatedAt
-
-  boards     board[]
-  posts      post[]
-  comments   comment[]
-
-
-  @@unique([email, loginType])
-}
-
-enum LoginType {
-  normal
-  google
-  naver
-}
-
-enum RoleType {
-  admin
-  normal
 }
 
 model board {
