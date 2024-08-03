@@ -10,10 +10,16 @@
  * ======================================================================
  */
 
-import ChatRepository from '../services/chat.service';
+import ChatRepository from '../repositories/chat.repository';
+
+const chatRepository = new ChatRepository();
 
 class ChatService {
   constructor() {}
+
+  async createChatRoom(userId, bodyData) {
+    return await chatRepository.insertChatRoom(userId, bodyData);
+  }
 }
 
 export default ChatService;

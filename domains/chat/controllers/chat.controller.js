@@ -12,8 +12,17 @@
 
 import ChatService from '../services/chat.service';
 
+const chatService = new ChatService();
+
 class ChatController {
   constructor() {}
+
+  async chatRoomAdd(req, res) {
+    const bodyData = req.body;
+    const userId = req.user.id;
+    const createdChatRoom = await chatService.createChatRoom(userId, bodyData);
+    res.status(201).json(createdChatRoom);
+  }
 }
 
 export default ChatController;

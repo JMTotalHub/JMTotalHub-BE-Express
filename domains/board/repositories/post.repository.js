@@ -47,9 +47,6 @@ async function findPostListByBoardId(boardId, queryData) {
 
 async function insertPost(userId, boardId, bodyData) {
   const { title, content } = bodyData;
-  console.log('repository!!!!');
-  console.log(boardId);
-  console.log(bodyData);
   return await prisma.post.create({
     data: {
       title,
