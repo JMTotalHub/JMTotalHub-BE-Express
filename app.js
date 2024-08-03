@@ -27,12 +27,13 @@ app.use(cookieParser());
 // 라우터 (도메인 분류)
 import authRouter from './domains/auth/routers';
 import boardRouter from './domains/board/routers';
+import chatRouter from './domains/chat/routers/index.js';
 import testRouter from './domains/test/routers/test.router.js';
 
 app.use('/auth', authRouter);
-// app.use('/users', userRouter);
 app.use('/tests', testRouter);
 app.use('/boards', boardRouter);
+app.use('/chat', chatRouter);
 
 app.get('/connect-test', (req, res) => {
   res.send('서버 연결 완료');
