@@ -25,7 +25,7 @@ enum ChatType {
 
 model chat_room_member {
   id          Int      @id @default(autoincrement())
-  email      String    @unique
+  email      String    
   nickname   String    @default("default-nickname")
   loginType  LoginType
   roleType   RoleType     

@@ -17,8 +17,26 @@ const chatRepository = new ChatRepository();
 class ChatService {
   constructor() {}
 
-  async createChatRoom(userId, bodyData) {
-    return await chatRepository.insertChatRoom(userId, bodyData);
+  async findChatRoom(userId, chatRoomId) {
+    return await chatRepository.findChatRoomById(userId, chatRoomId);
+  }
+
+  async findChatRoomList(userId, queryData) {
+    return await chatRepository.findChatRoomList(userId, queryData);
+  }
+
+  async createChatRoom(userData, bodyData) {
+    const createdChatRoom = await chatRepository.insertChatRoom(
+      userData,
+      bodyData
+    );
+
+    const createChatRoomMember = await chatRepository.insertChatRoomMember(
+      userData,
+      createdChatRoom
+    );
+
+    return createdChatRoom;
   }
 }
 

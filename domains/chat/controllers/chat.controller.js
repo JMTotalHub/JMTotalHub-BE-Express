@@ -17,10 +17,28 @@ const chatService = new ChatService();
 class ChatController {
   constructor() {}
 
+  async chatRoomDetails(req, res) {
+    const { chatRoomId } = req.params;
+    const userId = req.user.id;
+    const chatRoom = await chatService.findChatRoom(userId, chatRoomId);
+    res.status(200).json(chatRoom);
+  }
+
+  async chatRoomList(req, res) {
+    const queryData = req.query;
+    const userId = req.user.id;
+    const chatRoomList = await chatService.findChatRoomList(userId, queryData);
+    res.status(200).json(chatRoomList);
+  }
+
   async chatRoomAdd(req, res) {
     const bodyData = req.body;
-    const userId = req.user.id;
-    const createdChatRoom = await chatService.createChatRoom(userId, bodyData);
+    const { id, email, nickname, loginType, roleType } = req.user;
+    const userData = { id, email, nickname, loginType, roleType };
+    const createdChatRoom = await chatService.createChatRoom(
+      userData,
+      bodyData
+    );
     res.status(201).json(createdChatRoom);
   }
 }
