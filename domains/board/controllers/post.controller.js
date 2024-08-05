@@ -11,9 +11,6 @@ async function postAdd(req, res) {
   const { boardId } = req.params;
   const postData = req.body;
   const userId = req.user.id;
-  console.log('controller!!!!');
-  console.log(boardId);
-  console.log(postData);
 
   const createdPost = await PostService.createPost(userId, boardId, postData);
   res.status(201).json(createdPost);
