@@ -33,7 +33,7 @@ import testRouter from './domains/test/routers/test.router.js';
 app.use('/auth', authRouter);
 app.use('/tests', testRouter);
 app.use('/boards', boardRouter);
-app.use('/chat', chatRouter);
+app.use('/chats', chatRouter);
 
 app.get('/connect-test', (req, res) => {
   res.send('서버 연결 완료');

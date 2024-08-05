@@ -12,20 +12,20 @@ const chatRouter = express.Router();
 const chatController = new ChatController();
 
 chatRouter.get(
-  '/:chatRoomId',
+  '/chat-rooms/:chatRoomId',
   jwtAuthMiddleware,
   errorWrapper(chatController.chatRoomDetails)
 );
 
 chatRouter.get(
-  '/',
+  '/chat-rooms',
   jwtAuthMiddleware,
   validationMiddleware(chatDto.ChatRoomListDto),
   errorWrapper(chatController.chatRoomList)
 );
 
 chatRouter.post(
-  '/chat-room',
+  '/chat-rooms',
   jwtAuthMiddleware,
   errorWrapper(chatController.chatRoomAdd)
 );
